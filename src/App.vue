@@ -4,7 +4,9 @@
     <t-content>
       <router-view />
     </t-content>
-    <t-footer>Footer</t-footer>
+    <t-footer>
+      <p class="tw-text-xl tw-text-center">Made with ❤️ by youranreus</p>
+    </t-footer>
   </t-layout>
 </template>
 <script setup lang="ts">
