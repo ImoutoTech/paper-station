@@ -11,6 +11,7 @@
         </t-button>
         <template #content>
           <user-meta v-if="userStore.isLogin"></user-meta>
+          <user-login v-else></user-login>
         </template>
       </t-popup>
     </template>
@@ -21,6 +22,7 @@ import { useGlobalStore } from '@/stores/store';
 import { useRouter } from 'vue-router';
 
 import UserMeta from '../user/user-meta.vue';
+import UserLogin from '../user/user-login.vue';
 
 import { MENU_LIST } from '@/utils/constants';
 

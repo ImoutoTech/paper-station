@@ -14,6 +14,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     TAvatar: typeof import('tdesign-vue-next')['Avatar']
     TButton: typeof import('tdesign-vue-next')['Button']
+    TCard: typeof import('tdesign-vue-next')['Card']
     TContent: typeof import('tdesign-vue-next')['Content']
     TFooter: typeof import('tdesign-vue-next')['Footer']
     THeader: typeof import('tdesign-vue-next')['Header']
@@ -26,6 +27,7 @@ declare module 'vue' {
     TSpace: typeof import('tdesign-vue-next')['Space']
     TTag: typeof import('tdesign-vue-next')['Tag']
     UserLogin: typeof import('./src/components/user/user-login.vue')['default']
+    UserLoginDialog: typeof import('./src/components/user/user-login-dialog.vue')['default']
     UserMeta: typeof import('./src/components/user/user-meta.vue')['default']
   }
 }

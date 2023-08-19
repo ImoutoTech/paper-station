@@ -30,6 +30,16 @@ const routes = [
       menuKey: '/site',
       needAuth: true
     }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login-callback.vue'),
+    meta: {
+      title: '登录',
+      menuKey: '/login',
+      needAuth: false
+    }
   }
 ]
 

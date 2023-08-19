@@ -1,5 +1,5 @@
 <template>
-  <t-layout>
+  <t-layout class="app-layout">
     <t-header><header-nav/></t-header>
     <t-content>
       <router-view />
@@ -8,7 +8,7 @@
       <p class="tw-text-xl tw-text-center">Made with ❤️ by youranreus</p>
     </t-footer>
   </t-layout>
-  <fullscreen-loading v-if="userStore.loginLoading"/>
+  <fullscreen-loading v-if="userStore.loginLoading || isLoading"/>
 </template>
 <script setup lang="ts">
 import { onMounted, watch } from 'vue';
@@ -20,7 +20,7 @@ import FullscreenLoading from '@/components/layout/fullscreen-loading.vue';
 import { useGlobalStore } from '@/stores/store';
 import { getUserData } from './api/user';
 
-const { userStore } = useGlobalStore();
+const { userStore, isLoading } = useGlobalStore();
 const router = useRouter();
 
 onMounted(() => {
@@ -40,8 +40,6 @@ onMounted(() => {
       .finally(() => {
         userStore.setLoading(false);
       })
-  } else {
-    router.push('/')
   }
 })
 
@@ -54,3 +52,8 @@ watch(
   },
 )
 </script>
+<style lang="scss" scoped>
+.app-layout {
+  @apply tw-bg-white
+}
+</style>
