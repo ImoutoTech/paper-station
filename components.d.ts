@@ -7,10 +7,12 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    FullscreenLoading: typeof import('./src/components/layout/fullscreen-loading.vue')['default']
     HeaderNav: typeof import('./src/components/layout/header-nav.vue')['default']
     Navbar: typeof import('./src/components/layout/navbar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TAvatar: typeof import('tdesign-vue-next')['Avatar']
     TButton: typeof import('tdesign-vue-next')['Button']
     TContent: typeof import('tdesign-vue-next')['Content']
     TFooter: typeof import('tdesign-vue-next')['Footer']
@@ -18,6 +20,12 @@ declare module 'vue' {
     THeadMenu: typeof import('tdesign-vue-next')['HeadMenu']
     TIcon: typeof import('tdesign-vue-next')['Icon']
     TLayout: typeof import('tdesign-vue-next')['Layout']
+    TLoading: typeof import('tdesign-vue-next')['Loading']
     TMenuItem: typeof import('tdesign-vue-next')['MenuItem']
+    TPopup: typeof import('tdesign-vue-next')['Popup']
+    TSpace: typeof import('tdesign-vue-next')['Space']
+    TTag: typeof import('tdesign-vue-next')['Tag']
+    UserLogin: typeof import('./src/components/user/user-login.vue')['default']
+    UserMeta: typeof import('./src/components/user/user-meta.vue')['default']
   }
 }

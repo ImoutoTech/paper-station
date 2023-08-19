@@ -5,15 +5,22 @@
     </template>
     <t-menu-item v-for="menu in  MENU_LIST" :key="menu.value" :value="menu.value" @click="router.push(menu.value)">{{ menu.label }}</t-menu-item>
     <template #operations>
-      <t-button variant="text" shape="square">
-        <template #icon><t-icon name="user" /></template>
-      </t-button>
+      <t-popup trigger="click">
+        <t-button variant="text" shape="square">
+          <template #icon><t-icon name="user" /></template>
+        </t-button>
+        <template #content>
+          <user-meta v-if="userStore.isLogin"></user-meta>
+        </template>
+      </t-popup>
     </template>
   </t-head-menu>
 </template>
 <script setup lang="ts">
 import { useGlobalStore } from '@/stores/store';
 import { useRouter } from 'vue-router';
+
+import UserMeta from '../user/user-meta.vue';
 
 import { MENU_LIST } from '@/utils/constants';
 
@@ -22,5 +29,5 @@ defineOptions({
 })
 
 const router = useRouter();
-const { menuStore } = useGlobalStore();
+const { menuStore, userStore } = useGlobalStore();
 </script>
