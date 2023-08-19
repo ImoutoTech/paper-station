@@ -24,6 +24,7 @@ export const useUserStore = defineStore('user', () => {
     userInfo.email = ''
     userInfo.id = ''
     isLogin.value = false
+    localStorage.removeItem('PS_TOKEN')
   }
 
   const setLoading = (val: boolean) => (loginLoading.value = val)

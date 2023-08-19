@@ -11,7 +11,7 @@
   <fullscreen-loading v-if="userStore.loginLoading"/>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { RouterView, useRouter } from 'vue-router'
 import { MessagePlugin } from 'tdesign-vue-next';
 import HeaderNav from '@/components/layout/header-nav.vue'
@@ -44,4 +44,13 @@ onMounted(() => {
     router.push('/')
   }
 })
+
+watch(
+  () => userStore.isLogin,
+  (val) => {
+    if (!val) {
+      router.push('/')
+    }
+  },
+)
 </script>

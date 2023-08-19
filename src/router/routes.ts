@@ -7,7 +7,8 @@ const routes = [
     component: HomeView,
     meta: {
       title: '首页',
-      menuKey: '/'
+      menuKey: '/',
+      needAuth: false
     }
   },
   {
@@ -16,7 +17,8 @@ const routes = [
     component: HomeView,
     meta: {
       title: '配置管理',
-      menuKey: '/config'
+      menuKey: '/config',
+      needAuth: true
     }
   },
   {
@@ -25,7 +27,8 @@ const routes = [
     component: HomeView,
     meta: {
       title: '站点管理',
-      menuKey: '/site'
+      menuKey: '/site',
+      needAuth: true
     }
   }
 ]
