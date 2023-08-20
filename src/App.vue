@@ -28,14 +28,14 @@ onMounted(() => {
     userStore.setLoading(true);
     getUserData()
       .then((res) => {
+        console.log(res)
+        if (res.data.code !== 0) {
+          return;
+        }
         userStore.login({
-          ...res.data.data
+          ...res.data?.data
         })
         MessagePlugin.success('登录信息获取成功');
-      }).catch((e) => {
-        router.push('/');
-        MessagePlugin.warning('登录态已失效')
-        console.error(e);
       })
       .finally(() => {
         userStore.setLoading(false);
