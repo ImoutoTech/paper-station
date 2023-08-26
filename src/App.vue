@@ -28,7 +28,6 @@ onMounted(() => {
     userStore.setLoading(true);
     getUserData()
       .then((res) => {
-        console.log(res)
         if (res.data.code !== 0) {
           return;
         }

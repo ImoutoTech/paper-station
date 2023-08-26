@@ -14,8 +14,6 @@ API.interceptors.request.use((req) => {
 API.interceptors.response.use(
   (config) => config,
   (config) => {
-    console.log(config)
-
     if (config.response.data.msg === 'jwt expired') {
       localStorage.removeItem('PS_TOKEN')
       MessagePlugin.error('登录态已失效，即将刷新页面')
