@@ -1,37 +1,35 @@
 <template>
-  <div class="app-home">
-    <div class="banner">
-      <h2>Paper Station 动态配置系统</h2>
-    </div>
-
-    <div class="content">
-      <h3>如何食用</h3>
-      <section>
-        <t-steps :current="3" readonly theme="dot">
-          <t-step-item title="创建站点" content="配置站点域名" />
-          <t-step-item title="创建配置" content="创建你的配置文件"/>
-          <t-step-item title="完成" content="在你需要的地方使用吧" />
-        </t-steps>
-      </section>
-    </div>
+  <div class="config-home">
+    <t-card>
+      <div class="tw-flex tw-justify-between tw-items-center tw-mb-3">
+        <h2>我的配置</h2>
+        <t-button>新建</t-button>
+      </div>
+      <t-input placeholder="输入关键词查找配置"></t-input>
+    </t-card>
   </div>
 </template>
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useConfigList } from '@/hooks/useConfigList';
+
+const { configList, refreshConfigList } = useConfigList();
+
+onMounted(() => {
+  refreshConfigList().then(() => {
+    console.log(configList.value)
+  });
+});
+</script>
 <style lang="scss" scope>
-.app-home {
-  .banner {
-    @apply tw-h-[500px] tw-flex tw-justify-center tw-items-center tw-bg-slate-100;
+@import '../../assets/common.scss';
 
-    h2 {
-      @apply tw-text-3xl tw-opacity-70;
-    }
-  }
+.config-home {
+  @include content-width;
+  @apply tw-mt-5;
 
-  .content {
-    @apply tw-max-w-[968px] tw-w-[80%] tw-mx-auto tw-my-5;
-
-    h3 {
-      @apply tw-text-2xl tw-mb-10;
-    }
+  h2 {
+    @apply tw-text-xl tw-font-bold;
   }
 }
 </style>

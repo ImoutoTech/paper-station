@@ -14,7 +14,7 @@ const routes = [
   {
     path: '/config',
     name: 'config',
-    component: HomeView,
+    component: () => import('@/views/config/view-index.vue'),
     meta: {
       title: '配置管理',
       menuKey: '/config',
