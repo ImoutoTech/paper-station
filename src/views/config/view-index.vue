@@ -8,7 +8,7 @@
       <t-input placeholder="输入关键词查找配置"></t-input>
     </t-card>
 
-    <config-list :data="configData"/>
+    <config-list :data="configData" :loading="configLoading"/>
   </div>
 </template>
 <script setup lang="ts">
@@ -17,7 +17,7 @@ import { useRouter } from "vue-router";
 import { useConfigList } from '@/hooks/useConfigList';
 import ConfigList from './components/config-list.vue';
 
-const { configList: configData, refreshConfigList } = useConfigList();
+const { configList: configData, refreshConfigList, configLoading } = useConfigList();
 
 const router = useRouter();
 
