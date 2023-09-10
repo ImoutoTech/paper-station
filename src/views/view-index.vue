@@ -17,8 +17,6 @@
   </div>
 </template>
 <style lang="scss" scope>
-@import '../assets/common.scss';
-
 .app-home {
   .banner {
     @apply tw-h-[500px] tw-flex tw-justify-center tw-items-center tw-bg-slate-100;

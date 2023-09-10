@@ -3,7 +3,7 @@
     <t-card>
       <div class="tw-flex tw-justify-between tw-items-center tw-mb-3">
         <h2>我的配置</h2>
-        <t-button>新建</t-button>
+        <t-button @click="router.push({name: 'config-create'})">新建</t-button>
       </div>
       <t-input placeholder="输入关键词查找配置"></t-input>
     </t-card>
@@ -13,10 +13,13 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { useRouter } from "vue-router";
 import { useConfigList } from '@/hooks/useConfigList';
 import ConfigList from './components/config-list.vue';
 
 const { configList: configData, refreshConfigList } = useConfigList();
+
+const router = useRouter();
 
 onMounted(() => {
   refreshConfigList().then(() => {
@@ -25,8 +28,6 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scope>
-@import '../../assets/common.scss';
-
 .config-home {
   @include content-width;
   @apply tw-mt-5;
