@@ -7,17 +7,20 @@
       </div>
       <t-input placeholder="输入关键词查找配置"></t-input>
     </t-card>
+
+    <config-list :data="configData"/>
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useConfigList } from '@/hooks/useConfigList';
+import ConfigList from './components/config-list.vue';
 
-const { configList, refreshConfigList } = useConfigList();
+const { configList: configData, refreshConfigList } = useConfigList();
 
 onMounted(() => {
   refreshConfigList().then(() => {
-    console.log(configList.value)
+    console.log(configData.value)
   });
 });
 </script>
