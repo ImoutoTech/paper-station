@@ -1,6 +1,8 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
+import type { UserData } from '@/types'
+
 export const useUserStore = defineStore('user', () => {
   const isLogin = ref(false)
 
@@ -9,10 +11,10 @@ export const useUserStore = defineStore('user', () => {
   const userInfo = reactive({
     avatar: '',
     email: '',
-    id: ''
+    id: 0
   })
 
-  const login = (data: Record<string, string>) => {
+  const login = (data: UserData) => {
     userInfo.avatar = data.avatar
     userInfo.email = data.email
     userInfo.id = data.id
@@ -22,7 +24,7 @@ export const useUserStore = defineStore('user', () => {
   const logout = () => {
     userInfo.avatar = ''
     userInfo.email = ''
-    userInfo.id = ''
+    userInfo.id = 0
     isLogin.value = false
     localStorage.removeItem('PS_TOKEN')
   }

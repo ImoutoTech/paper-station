@@ -32,7 +32,6 @@ const login = (ticket: string) => {
   loading.value = true;
 
   userLogin(ticket).then((res) => {
-    console.log(res)
     if (res.data.code !== 0) {
       throw new Error(res.data.msg);
     }
