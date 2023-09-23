@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
+import { MessagePlugin } from 'tdesign-vue-next';
 import { UnhappyIcon, CatIcon, LoadIcon } from 'tdesign-icons-vue-next'
 import { useGlobalStore } from '@/stores/store';
 import { userLogin } from '@/api/user';
@@ -38,6 +39,7 @@ const login = (ticket: string) => {
 
     userStore.login(res.data.data.user);
     localStorage.setItem('PS_TOKEN', `Bearer ${res.data.data.token}`);
+    MessagePlugin.success('登陆成功');
     router.push('/')
   }).catch((e) => {
     isError.value = true;
