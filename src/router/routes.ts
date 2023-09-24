@@ -14,12 +14,33 @@ const routes = [
   {
     path: '/config',
     name: 'config',
-    component: () => import('@/views/config/view-index.vue'),
     meta: {
       title: '配置管理',
       menuKey: '/config',
       needAuth: true
-    }
+    },
+    children: [
+      {
+        path: '',
+        name: 'config-index',
+        component: () => import('@/views/config/view-index.vue'),
+        meta: {
+          title: '配置管理',
+          menuKey: '/config',
+          needAuth: true
+        }
+      },
+      {
+        path: 'create',
+        name: 'config-create',
+        component: () => import('@/views/config/config-create/view-index.vue'),
+        meta: {
+          title: '创建配置',
+          menuKey: '/config',
+          needAuth: true
+        }
+      }
+    ]
   },
   {
     path: '/site',
