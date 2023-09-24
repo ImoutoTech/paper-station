@@ -27,7 +27,7 @@ import { useConfigStore } from './store'
 
 const { meta, updateName, updateSlug } = useConfigStore();
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .config-create-sidebar {
   @apply tw-h-full tw-px-4 tw-py-2;
 }

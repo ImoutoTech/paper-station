@@ -27,7 +27,7 @@ onMounted(() => {
   });
 });
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .config-home {
   @include content-width;
   @apply tw-mt-5;

@@ -31,7 +31,7 @@ withDefaults(defineProps<{
   loading: false,
 });
 </script>
-<style lang="scss" scope>
+<style lang="scss" d>
 .config-list {
   @apply tw-mt-4;
 }

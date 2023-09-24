@@ -15,7 +15,7 @@ import ViewSidebar from './view-sidebar.vue';
 import ConfigEditor from './config-editor.vue';
 
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .config-create {
   @apply tw-h-[calc(100vh-132px)];
 }
