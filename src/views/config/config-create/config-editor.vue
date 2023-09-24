@@ -1,18 +1,21 @@
 <template>
   <div class="config-editor">
     <vue-monaco-editor
-      v-model:value="value"
+      :value="content"
       theme="vs-dark"
       :options="options"
       language="json"
+      @update:value="updateContent"
       @mount="editor = $event"
     />
   </div>
 </template>
 <script setup lang="ts">
 import { ref, shallowRef } from 'vue';
+import { useConfigStore } from './store';
 
-const value = ref('');
+const { content, updateContent } = useConfigStore();
+
 const editor = shallowRef();
 
 const options = ref({
