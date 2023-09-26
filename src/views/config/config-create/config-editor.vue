@@ -1,20 +1,22 @@
 <template>
   <div class="config-editor">
-    <div class="config-editor-header">
-      <t-space>
-        <t-select v-model="editorConfig.language" class="tw-w-[100px]" :borderless="true" :options="LANGUAGE_OPTIONS" @change="saveEditorConfig"></t-select>
-        <editor-config-dialog :data="editorConfig" @update="handleConfirmEditor"/>
-      </t-space>
-    </div>
     <div class="config-editor-container">
-      <vue-monaco-editor
-        :value="content"
-        :theme="editorConfig.theme"
-        :options="editorConfig.options"
-        :language="editorConfig.language"
-        @update:value="updateContent"
-        @mount="editor = $event"
-      />
+      <t-card title="编辑配置" header-bordered class="tw-h-full tw-w-full tw-overflow-hidden">
+        <template #actions>
+          <t-space>
+            <t-select v-model="editorConfig.language" class="tw-w-[100px]" :borderless="true" :options="LANGUAGE_OPTIONS" @change="saveEditorConfig"></t-select>
+            <editor-config-dialog :data="editorConfig" @update="handleConfirmEditor"/>
+          </t-space>
+        </template>
+        <vue-monaco-editor
+          :value="content"
+          :theme="editorConfig.theme"
+          :options="editorConfig.options"
+          :language="editorConfig.language"
+          @update:value="updateContent"
+          @mount="editor = $event"
+        />
+      </t-card>
     </div>
   </div>
 </template>
@@ -65,7 +67,11 @@ onMounted(async () => {
   }
 
   &-container {
-    @apply tw-h-[calc(100%-40px)];
+    @apply tw-h-full tw-p-2;
+
+    :deep(.t-card__body) {
+      @apply tw-p-0 tw-h-[calc(100%-65px)] tw-overflow-hidden;
+    }
   }
 }
 </style>
