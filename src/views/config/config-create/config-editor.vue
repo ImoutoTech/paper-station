@@ -53,7 +53,6 @@ onMounted(async () => {
 
   if (editorOptions !== null) {
     Object.assign(editorConfig, DEFAULT_EDITOR_CONFIG, editorOptions);
-    console.log('读取成功')
   }
 })
 </script>

@@ -9,9 +9,11 @@ export const useConfigStore = defineStore('config', () => {
 
   const content = ref('')
 
+  const loading = ref(false)
+
   const getConfigData = () => ({
     ...meta,
-    content
+    data: content.value
   })
 
   const updateContent = (str: string) => (content.value = str)
@@ -25,5 +27,17 @@ export const useConfigStore = defineStore('config', () => {
     meta.slug = slug
   }
 
-  return { meta, content, getConfigData, updateContent, updateMeta, updateName, updateSlug }
+  const setLoading = (v: boolean) => (loading.value = v)
+
+  return {
+    meta,
+    content,
+    loading,
+    getConfigData,
+    updateContent,
+    updateMeta,
+    updateName,
+    updateSlug,
+    setLoading
+  }
 })

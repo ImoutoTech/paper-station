@@ -3,12 +3,12 @@
     <div class="tw-mb-4">
       <h2 class="tw-text-2xl">创建配置</h2>
     </div>
-    <t-form :data="meta" label-align="top" class="tw-mb-4">
-      <t-form-item label="配置名" prop="name">
+    <t-form ref="formRef" :data="meta" :rules="formRules" label-align="top" class="tw-mb-4">
+      <t-form-item label="配置名" name="name">
         <t-input :value="meta.name" @change="updateName"></t-input>
       </t-form-item>
 
-      <t-form-item label="Slug" prop="slug">
+      <t-form-item label="Slug" name="slug">
         <t-input :value="meta.slug" @change="updateSlug"></t-input>
       </t-form-item>
     </t-form>
@@ -17,15 +17,35 @@
       可通过以下链接获取配置 <span>{{ `${ENV.API}/config/get?slug=${meta.slug || '{slug}'}` }}</span>
     </div>
 
-    <t-button block>创建</t-button>
+    <t-button block @click="handleConfirm" :loading="loading">创建</t-button>
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue';
 import { ENV } from '@/utils/env';
-
 import { useConfigStore } from './store'
 
-const { meta, updateName, updateSlug } = useConfigStore();
+const { meta, updateName, updateSlug, loading } = useConfigStore();
+
+const emit = defineEmits<{
+  (e: 'confirm'): void;
+}>()
+
+const formRules = {
+  name: [{ required: true, message: '请填写该选项', type: 'error' }],
+  slug: [{ required: true, message: '请填写该选项', type: 'error' }],
+};
+
+const formRef = ref();
+
+const handleConfirm = async () => {
+  if (!formRef.value) {
+    return;
+  }
+
+  const isValidate = await formRef.value.validate();
+  isValidate === true && emit('confirm');
+}
 </script>
 <style lang="scss" scoped>
 .config-create-sidebar {

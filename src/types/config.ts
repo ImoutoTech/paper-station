@@ -1,9 +1,14 @@
-export interface ConfigItem {
-  _id: string
-  updated_at: string
+export interface ConfigBaseContent {
   slug: string
-  owner: number
   name: string
   data: string
+}
+
+export interface ConfigItem extends ConfigBaseContent {
+  _id: string
+  updated_at: string
+  owner: number
   created_at: string
 }
+
+export type ConfigCreateParam = ConfigBaseContent

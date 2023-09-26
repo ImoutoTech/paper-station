@@ -22,9 +22,7 @@ const { configList: configData, refreshConfigList, configLoading } = useConfigLi
 const router = useRouter();
 
 onMounted(() => {
-  refreshConfigList().then(() => {
-    console.log(configData.value)
-  });
+  refreshConfigList()
 });
 </script>
 <style lang="scss" scoped>
