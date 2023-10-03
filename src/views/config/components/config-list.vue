@@ -6,7 +6,7 @@
           <t-list-item-meta  :title="item.name" />
           <template #action>
             <span>
-              <t-button theme="primary" variant="text">编辑</t-button>
+              <t-button theme="primary" variant="text" @click="router.push(`/config/edit/${item.slug}`)">编辑</t-button>
               <t-button theme="primary" variant="text">详情</t-button>
               <t-button theme="danger" variant="text">删除</t-button>
             </span>
@@ -17,6 +17,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import type { ConfigItem } from '@/types';
 
 defineOptions({
@@ -30,8 +31,10 @@ withDefaults(defineProps<{
   data: () => [],
   loading: false,
 });
+
+const router = useRouter();
 </script>
-<style lang="scss" d>
+<style lang="scss">
 .config-list {
   @apply tw-mt-4;
 }

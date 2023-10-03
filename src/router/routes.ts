@@ -33,9 +33,19 @@ const routes = [
       {
         path: 'create',
         name: 'config-create',
-        component: () => import('@/views/config/config-create/view-index.vue'),
+        component: () => import('@/views/config/config-edit/view-index.vue'),
         meta: {
           title: '创建配置',
+          menuKey: '/config',
+          needAuth: true
+        }
+      },
+      {
+        path: 'edit/:slug',
+        name: 'config-edit',
+        component: () => import('@/views/config/config-edit/view-index.vue'),
+        meta: {
+          title: '编辑配置',
           menuKey: '/config',
           needAuth: true
         }

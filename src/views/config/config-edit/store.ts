@@ -29,6 +29,12 @@ export const useConfigStore = defineStore('config', () => {
 
   const setLoading = (v: boolean) => (loading.value = v)
 
+  const clear = () => {
+    meta.name = ''
+    meta.slug = ''
+    content.value = ''
+  }
+
   return {
     meta,
     content,
@@ -38,6 +44,7 @@ export const useConfigStore = defineStore('config', () => {
     updateMeta,
     updateName,
     updateSlug,
-    setLoading
+    setLoading,
+    clear
   }
 })

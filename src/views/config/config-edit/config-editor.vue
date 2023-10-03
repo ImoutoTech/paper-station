@@ -9,11 +9,11 @@
           </t-space>
         </template>
         <vue-monaco-editor
-          :value="content"
+          :value="configStore.content"
           :theme="editorConfig.theme"
           :options="editorConfig.options"
           :language="editorConfig.language"
-          @update:value="updateContent"
+          @update:value="configStore.updateContent"
           @mount="editor = $event"
         />
       </t-card>
@@ -30,7 +30,7 @@ import { cloneDeep } from 'lodash-es';
 
 import { LANGUAGE_OPTIONS, DEFAULT_EDITOR_CONFIG } from './constants';
 
-const { content, updateContent } = useConfigStore();
+const configStore = useConfigStore();
 const globalStore = useGlobalStore();
 
 const editor = shallowRef();
