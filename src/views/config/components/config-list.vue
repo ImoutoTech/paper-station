@@ -7,7 +7,7 @@
           <template #action>
             <span>
               <t-button theme="primary" variant="text" @click="router.push(`/config/edit/${item.slug}`)">编辑</t-button>
-              <t-button theme="primary" variant="text">详情</t-button>
+              <t-button theme="primary" variant="text" @click="handleShowDetail(item)">详情</t-button>
               <t-popconfirm
                 placement="top-left"
                 theme="danger"
@@ -32,10 +32,13 @@
       </div>
     </t-skeleton>
   </div>
+  <config-detail-dialog v-model:visible="detailVisible" :data="detailItem"/>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { ConfigItem } from '@/types';
+import ConfigDetailDialog from './config-detail-dialog.vue';
 
 defineOptions({
   name: 'ConfigList',
@@ -58,6 +61,14 @@ const router = useRouter();
 const DELETE_POPUP_CONFIRM = {
   content: '确认删除',
   theme: 'danger',
+}
+
+const detailVisible = ref(false);
+const detailItem = ref<ConfigItem>();
+
+const handleShowDetail = (item: ConfigItem) => {
+  detailItem.value = item;
+  detailVisible.value = true;
 }
 
 </script>
