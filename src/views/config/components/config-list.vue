@@ -1,7 +1,7 @@
 <template>
   <div class="config-list">
     <t-skeleton :loading="loading">
-      <t-list>
+      <t-list :split="true" size="small">
         <t-list-item v-for="item in data" :key="item._id">
           <t-list-item-meta  :title="item.name" />
           <template #action>
@@ -74,6 +74,12 @@ const handleShowDetail = (item: ConfigItem) => {
 </script>
 <style lang="scss">
 .config-list {
-  @apply tw-mt-4;
+  .t-list-item__meta-title {
+    @apply tw-m-0;
+  }
+
+  .t-list--split .t-list-item:last-of-type::after {
+    @apply tw-h-0;
+  }
 }
 </style>

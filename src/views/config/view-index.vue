@@ -1,15 +1,17 @@
 <template>
   <div class="config-home">
-    <t-card>
-      <div class="tw-flex tw-justify-between tw-items-center tw-mb-3">
-        <h2>我的配置</h2>
-        <t-button @click="router.push({name: 'config-create'})">新建</t-button>
-      </div>
-      <t-input v-model="configSearchText" placeholder="输入关键词，回车查找配置" @enter="handleSearch"></t-input>
-    </t-card>
-
     <t-space direction="vertical" class="tw-w-full">
-      <config-list :data="configData" :loading="configLoading" @del="handleDelete"/>
+      <t-card>
+        <div class="tw-flex tw-justify-between tw-items-center tw-mb-3">
+          <h2>我的配置</h2>
+          <t-button @click="router.push({name: 'config-create'})">新建</t-button>
+        </div>
+        <t-input v-model="configSearchText" placeholder="输入关键词，回车查找配置" @enter="handleSearch"></t-input>
+      </t-card>
+
+      <t-card>
+        <config-list :data="configData" :loading="configLoading" @del="handleDelete"/>
+      </t-card>
 
       <t-pagination
         v-model="configPagination.current"
