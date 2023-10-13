@@ -1,7 +1,7 @@
 <template>
   <div class="config-list">
     <t-skeleton :loading="loading">
-      <t-list :stripe="true">
+      <t-list>
         <t-list-item v-for="item in data" :key="item._id">
           <t-list-item-meta  :title="item.name" />
           <template #action>
@@ -13,6 +13,10 @@
           </template>
         </t-list-item>
       </t-list>
+
+      <div v-if="!data.length" class="tw-text-center tw-py-8 tw-font-light tw-text-3xl tw-opacity-50">
+        No Data (x.x)
+      </div>
     </t-skeleton>
   </div>
 </template>

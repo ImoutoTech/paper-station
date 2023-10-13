@@ -5,10 +5,19 @@
         <h2>我的配置</h2>
         <t-button @click="router.push({name: 'config-create'})">新建</t-button>
       </div>
-      <t-input placeholder="输入关键词查找配置"></t-input>
+      <t-input v-model="configSearchText" placeholder="输入关键词，回车查找配置" @enter="handleSearch"></t-input>
     </t-card>
 
-    <config-list :data="configData" :loading="configLoading"/>
+    <t-space direction="vertical" class="tw-w-full">
+      <config-list :data="configData" :loading="configLoading"/>
+
+      <t-pagination
+        v-model="configPagination.current"
+        v-model:pageSize="configPagination.size"
+        :total="configPagination.total"
+        @change="onPageChange"
+      />
+    </t-space>
   </div>
 </template>
 <script setup lang="ts">
@@ -17,7 +26,15 @@ import { useRouter } from "vue-router";
 import { useConfigList } from '@/hooks/useConfigList';
 import ConfigList from './components/config-list.vue';
 
-const { configList: configData, refreshConfigList, configLoading } = useConfigList();
+const { 
+  configList: configData,
+  refreshConfigList,
+  configLoading,
+  configPagination,
+  onPageChange,
+  configSearchText,
+  handleSearch
+} = useConfigList();
 
 const router = useRouter();
 

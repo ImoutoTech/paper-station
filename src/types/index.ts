@@ -7,3 +7,10 @@ export interface Restful<T> {
   msg: string
   data: T
 }
+
+export interface PageList<T> {
+  total: number
+  items: T[]
+}
+
+export type RestfulPage<T> = Restful<PageList<T>>
