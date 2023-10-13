@@ -9,7 +9,7 @@
     </t-card>
 
     <t-space direction="vertical" class="tw-w-full">
-      <config-list :data="configData" :loading="configLoading"/>
+      <config-list :data="configData" :loading="configLoading" @del="handleDelete"/>
 
       <t-pagination
         v-model="configPagination.current"
@@ -33,7 +33,8 @@ const {
   configPagination,
   onPageChange,
   configSearchText,
-  handleSearch
+  handleSearch,
+  handleDelete,
 } = useConfigList();
 
 const router = useRouter();

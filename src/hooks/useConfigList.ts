@@ -1,7 +1,7 @@
 import { ref, reactive } from 'vue'
 import { type ConfigItem } from '@/types'
-import { getUserConfig } from '@/api/config'
-import type { PageInfo } from 'tdesign-vue-next'
+import { getUserConfig, delConfig } from '@/api/config'
+import { MessagePlugin, type PageInfo } from 'tdesign-vue-next'
 
 export const useConfigList = () => {
   const configList = ref<ConfigItem[]>([])
@@ -37,6 +37,20 @@ export const useConfigList = () => {
     refreshConfigList()
   }
 
+  const handleDelete = (slug: string) => {
+    delConfig(slug)
+      .then((res) => {
+        if (res.data.code !== 0) {
+          throw new Error(res.data.msg)
+        }
+        MessagePlugin.success('删除成功')
+        refreshConfigList()
+      })
+      .catch((e) => {
+        MessagePlugin.error(e.message)
+      })
+  }
+
   return {
     configList,
     configPagination,
@@ -44,6 +58,7 @@ export const useConfigList = () => {
     configSearchText,
     refreshConfigList,
     onPageChange,
-    handleSearch
+    handleSearch,
+    handleDelete
   }
 }

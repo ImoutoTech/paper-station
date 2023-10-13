@@ -8,7 +8,20 @@
             <span>
               <t-button theme="primary" variant="text" @click="router.push(`/config/edit/${item.slug}`)">编辑</t-button>
               <t-button theme="primary" variant="text">详情</t-button>
-              <t-button theme="danger" variant="text">删除</t-button>
+              <t-popconfirm
+                placement="top-left"
+                theme="danger"
+                :confirm-btn="DELETE_POPUP_CONFIRM"
+                @confirm="emits('del', item.slug)"
+              >
+                <template #content>
+                  <div>
+                    <p class="tw-font-bold tw-mb-2">确认删除{{item.name}}吗？</p>
+                    <p class="tw-opacity-50">删除后，所有已关联的站点将无法访问该配置</p>
+                  </div>
+                </template>
+                <t-button theme="danger" variant="text">删除</t-button>
+              </t-popconfirm>
             </span>
           </template>
         </t-list-item>
@@ -36,7 +49,17 @@ withDefaults(defineProps<{
   loading: false,
 });
 
+const emits = defineEmits<{
+  (e: 'del', slug: string): void;
+}>()
+
 const router = useRouter();
+
+const DELETE_POPUP_CONFIRM = {
+  content: '确认删除',
+  theme: 'danger',
+}
+
 </script>
 <style lang="scss">
 .config-list {
