@@ -55,12 +55,23 @@ const routes = [
   {
     path: '/site',
     name: 'site',
-    component: HomeView,
     meta: {
       title: '站点管理',
       menuKey: '/site',
       needAuth: true
-    }
+    },
+    children: [
+      {
+        path: '',
+        name: 'site-index',
+        component: () => import('@/views/site/view-index.vue'),
+        meta: {
+          title: '配置管理',
+          menuKey: '/site',
+          needAuth: true
+        }
+      }
+    ]
   },
   {
     path: '/login',
