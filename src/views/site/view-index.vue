@@ -12,18 +12,21 @@
           @enter="siteStore.handleSearch"
         ></t-input>
       </t-card>
+
+      <site-list :data="siteData" :pre-line="3" :loading="siteLoading"/>
     </t-space>
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import SiteList from './components/site-list.vue';
 import { useSiteList } from '@/hooks/useSiteList';
 
 const router = useRouter();
 
 const siteStore = useSiteList();
-const { siteSearchText } = siteStore;
+const { siteSearchText, siteList: siteData, siteLoading } = siteStore;
 
 onMounted(() => {
   siteStore.refreshSiteList();

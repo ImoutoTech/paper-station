@@ -23,7 +23,6 @@ export const useSiteList = () => {
     siteList.value = res?.data?.data?.items || []
     sitePagination.total = res?.data?.data?.total ?? 0
     siteLoading.value = false
-    console.log(siteList.value)
     return res
   }
 
