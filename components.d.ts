@@ -34,6 +34,7 @@ declare module 'vue' {
     TListItemMeta: typeof import('tdesign-vue-next')['ListItemMeta']
     TLoading: typeof import('tdesign-vue-next')['Loading']
     TMenuItem: typeof import('tdesign-vue-next')['MenuItem']
+    TOption: typeof import('tdesign-vue-next')['Option']
     TPagination: typeof import('tdesign-vue-next')['Pagination']
     TPopconfirm: typeof import('tdesign-vue-next')['Popconfirm']
     TPopup: typeof import('tdesign-vue-next')['Popup']

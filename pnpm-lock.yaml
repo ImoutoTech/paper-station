@@ -32,8 +32,8 @@ dependencies:
     specifier: ^0.2.2
     version: 0.2.2(vue@3.3.4)
   tdesign-vue-next:
-    specifier: ^1.4.2
-    version: 1.4.2(vue@3.3.4)
+    specifier: ^1.6.2
+    version: 1.6.2(vue@3.3.4)
   vue:
     specifier: ^3.3.4
     version: 3.3.4
@@ -1094,7 +1094,7 @@ packages:
       normalize-path: 3.0.0
       readdirp: 3.6.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
 
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -1652,8 +1652,8 @@ packages:
     resolution: {integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=}
     dev: true
 
-  /fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
@@ -2686,7 +2686,7 @@ packages:
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /run-applescript@5.0.0:
@@ -2963,15 +2963,6 @@ packages:
       - ts-node
     dev: true
 
-  /tdesign-icons-vue-next@0.1.12(vue@3.3.4):
-    resolution: {integrity: sha512-i+hkCeq+qjI+Gau9TeSmdrvzopQZtZWb/AxFaLyKH4mmnItiiU9lpjIg9wYcLYhFONeuGhHgG0n4YhVxgW8eHA==}
-    peerDependencies:
-      vue: ^3.0.0
-    dependencies:
-      '@babel/runtime': 7.22.10
-      vue: 3.3.4
-    dev: false
-
   /tdesign-icons-vue-next@0.2.2(vue@3.3.4):
     resolution: {integrity: sha512-ZKleBME7ZF1IVgnRXmIBPjfNa2Mef1nrK56f2xwn1Aa5mvXxB3fSxEzwhObR7bhzf/K42mz/Knnbll5Y7vCBjg==}
     peerDependencies:
@@ -2981,8 +2972,8 @@ packages:
       vue: 3.3.4
     dev: false
 
-  /tdesign-vue-next@1.4.2(vue@3.3.4):
-    resolution: {integrity: sha512-3c6aImb6/ygil56wYrSkHu2NK4O/RylsxwoFLspYVXM6Mq2YX7/XMxt1duY/3VfllryNwAe751z0kB27BEydIg==}
+  /tdesign-vue-next@1.6.2(vue@3.3.4):
+    resolution: {integrity: sha512-EMWCYzi1s/gIqL8xcJBjBMk3hyB0cn5frVQmiyjD/mXSxySDfYALM04KsirQmrIxMTMdyHBa36voRBp0D0QabA==}
     peerDependencies:
       vue: '>=3.1.0'
     dependencies:
@@ -2996,7 +2987,7 @@ packages:
       lodash: 4.17.21
       mitt: 3.0.1
       sortablejs: 1.15.0
-      tdesign-icons-vue-next: 0.1.12(vue@3.3.4)
+      tdesign-icons-vue-next: 0.2.2(vue@3.3.4)
       tinycolor2: 1.6.0
       validator: 13.11.0
       vue: 3.3.4
@@ -3280,7 +3271,7 @@ packages:
       rollup: 3.28.0
       sass: 1.65.1
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     dev: true
 
   /vue-demi@0.14.5(vue@3.3.4):

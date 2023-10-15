@@ -22,7 +22,7 @@
     "qs": "^6.11.2",
     "sass": "^1.65.1",
     "tdesign-icons-vue-next": "^0.2.2",
-    "tdesign-vue-next": "^1.4.2",
+    "tdesign-vue-next": "^1.6.2",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
