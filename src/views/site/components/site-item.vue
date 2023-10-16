@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { SiteItem } from '@/types';
+import { DialogPlugin } from 'tdesign-vue-next';
 
 defineOptions({
   name: 'SiteItem',
@@ -32,6 +33,22 @@ const emits = defineEmits<{
   (e: 'inspect', id: string): void;
   (e: 'edit', id: string): void;
 }>()
+
+const deleteConfirm = () => {
+  const dialog = DialogPlugin({
+    header: '删除站点',
+    body: `你确定要删除站点${props.data.name}吗？`,
+    confirmBtn: {
+      theme: 'danger',
+      content: '确定',
+    },
+    cancelBtn: '取消',
+    onConfirm: () => {
+      emits('del', props.data._id)
+      dialog.destroy()
+    }
+  });
+}
 
 const actionOptions = [
   {
@@ -48,7 +65,7 @@ const actionOptions = [
     content: '删除',
     value: 'del',
     theme: 'error',
-    onClick: () => emits('del', props.data._id),
+    onClick: () => deleteConfirm(),
   },
 ];
 
