@@ -30,20 +30,25 @@ const props = withDefaults(defineProps<{
 const emits = defineEmits<{
   (e: 'del', id: string): void;
   (e: 'inspect', id: string): void;
+  (e: 'edit', id: string): void;
 }>()
 
 const actionOptions = [
   {
     content: '编辑',
     value: 'edit',
+    onClick: () => emits('edit', props.data._id),
   },
   {
     content: '详情',
     value: 'inspect',
+    onClick: () => emits('inspect', props.data._id),
   },
   {
     content: '删除',
     value: 'del',
+    theme: 'error',
+    onClick: () => emits('del', props.data._id),
   },
 ];
 

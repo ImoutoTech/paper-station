@@ -10,7 +10,7 @@
               <t-option label="3个" :value="3"></t-option>
               <t-option label="4个" :value="4"></t-option>
             </t-select>
-            <t-button @click="router.push({name: 'config-create'})">新建</t-button>
+            <t-button @click="createVisible = true">新建</t-button>
           </t-space>
         </div>
         <t-input
@@ -20,7 +20,13 @@
         ></t-input>
       </t-card>
 
-      <site-list :data="siteData" :pre-line="displayPreLine" :loading="siteLoading"/>
+      <site-list
+        :data="siteData"
+        :pre-line="displayPreLine"
+        :loading="siteLoading"
+        @del="siteStore.handleDelete($event)"
+        @refresh="siteStore.refreshSiteList"
+      />
 
       <t-pagination
         v-model="siteStore.sitePagination.current"
@@ -29,20 +35,25 @@
         @change="siteStore.onPageChange"
       />
     </t-space>
+
+    <site-edit
+      v-model:visible="createVisible"
+      is-create
+      @confirm="siteStore.refreshSiteList"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 import SiteList from './components/site-list.vue';
+import SiteEdit from "./components/site-edit.vue";
 import { useSiteList } from '@/hooks/useSiteList';
-
-const router = useRouter();
 
 const siteStore = useSiteList();
 const { siteSearchText, siteList: siteData, siteLoading } = siteStore;
 
 const displayPreLine = ref(3);
+const createVisible = ref(false);
 
 onMounted(() => {
   siteStore.refreshSiteList();

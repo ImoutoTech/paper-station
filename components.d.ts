@@ -47,6 +47,8 @@ declare module 'vue' {
     TSwiper: typeof import('tdesign-vue-next')['Swiper']
     TSwiperItem: typeof import('tdesign-vue-next')['SwiperItem']
     TTag: typeof import('tdesign-vue-next')['Tag']
+    TTagInput: typeof import('tdesign-vue-next')['TagInput']
+    TTransfer: typeof import('tdesign-vue-next')['Transfer']
     UserLogin: typeof import('./src/components/user/user-login.vue')['default']
     UserLoginDialog: typeof import('./src/components/user/user-login-dialog.vue')['default']
     UserMeta: typeof import('./src/components/user/user-meta.vue')['default']
