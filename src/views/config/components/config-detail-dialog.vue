@@ -21,17 +21,29 @@
       <t-form-item label="上次修改于">
         {{ data?.updated_at || '-' }}
       </t-form-item>
+      <t-form-item label="访问链接">
+        <t-link underline theme="primary" @click="handleCopy">
+          <template #prefix-icon>
+            <CopyIcon/>
+          </template>
+          {{ `${ENV.API}/config/get?slug=${data?.slug}` }}
+        </t-link>
+      </t-form-item>
     </t-form>
   </t-dialog>
 </template>
 <script lang="ts" setup>
 import type { ConfigItem } from '@/types';
+import { ENV } from '@/utils/env';
+import { CopyIcon } from 'tdesign-icons-vue-next';
+import { MessagePlugin } from 'tdesign-vue-next';
+import copy from 'copy-to-clipboard';
 
 defineOptions({
   name: 'ConfigDetailDialog',
 });
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   data?: ConfigItem,
   visible: boolean;
 }>(), {
@@ -41,4 +53,10 @@ withDefaults(defineProps<{
 const emits = defineEmits<{
   (e: 'update:visible', value: boolean): void;
 }>()
+
+
+const handleCopy = () => {
+  copy(`${ENV.API}/config/get?slug=${props.data?.slug}`);
+  MessagePlugin.success('复制成功')
+}
 </script>
