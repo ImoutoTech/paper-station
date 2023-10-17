@@ -4,7 +4,7 @@
       <t-card title="编辑配置" header-bordered class="tw-h-full tw-w-full tw-overflow-hidden">
         <template #actions>
           <t-space>
-            <t-select v-model="editorConfig.language" class="tw-w-[100px]" :borderless="true" :options="LANGUAGE_OPTIONS" @change="saveEditorConfig"></t-select>
+            <t-select v-model="editorConfig.language" disabled class="tw-w-[100px]" :borderless="true" :options="LANGUAGE_OPTIONS" @change="saveEditorConfig"></t-select>
             <editor-config-dialog :data="editorConfig" @update="handleConfirmEditor"/>
           </t-space>
         </template>
