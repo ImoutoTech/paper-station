@@ -20,3 +20,5 @@ export const updateConfig = (slug: string, data: ConfigCreateParam) =>
   API.put<Restful<ConfigItem>>(`/config/${slug}`, qs.stringify(data))
 
 export const delConfig = (slug: string) => API.delete<Restful<null>>(`/config/${slug}`)
+
+export const readConfig = (slug: string) => API.get(`/config/get`, { params: { slug } })

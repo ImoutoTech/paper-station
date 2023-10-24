@@ -5,17 +5,70 @@
     </div>
 
     <div class="content">
-      <h3>如何食用</h3>
-      <section>
-        <t-steps :current="3" readonly theme="dot">
-          <t-step-item title="创建站点" content="配置站点域名" />
-          <t-step-item title="创建配置" content="创建你的配置文件"/>
-          <t-step-item title="完成" content="在你需要的地方使用吧" />
-        </t-steps>
-      </section>
+      <h3>README</h3>
+      <t-card>
+        {{ displayData }}
+      </t-card>
+      <t-space></t-space>
+      <h3>快速开始</h3>
+      <t-row :gutter="16">
+        <t-col :span="4">
+          <t-card title="登录" hover-shadow header-bordered>
+            啥事都得先有个账号，点击右上角以登录。
+          </t-card>
+        </t-col>
+        <t-col :span="4">
+          <t-card title="创建配置" hover-shadow header-bordered>
+            创建一个配置，支持JSON格式。
+            <template #actions>
+              <span
+                v-if="globalStore.userStore.isLogin"
+                class="tw-cursor-pointer"
+                @click="router.push('/config/create')"
+              >
+                <RocketIcon/>
+              </span>
+              <span v-else class="tw-cursor-pointer">请先登录</span>
+            </template>
+          </t-card>
+        </t-col>
+        <t-col :span="4">
+          <t-card title="创建站点" hover-shadow header-bordered>
+            创建一个站点，并输入域名、关联配置。配置关联后，只有该域名才能访问对应配置噢。
+            <template #actions>
+              <span
+                v-if="globalStore.userStore.isLogin"
+                class="tw-cursor-pointer"
+                @click="router.push('/site')"
+              >
+                <RocketIcon/>
+              </span>
+              <span v-else class="tw-cursor-pointer">请先登录</span>
+            </template>
+          </t-card>
+        </t-col>
+      </t-row>
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router';
+import { readConfig } from '@/api/config';
+import { useGlobalStore } from '@/stores/store';
+
+import { RocketIcon } from 'tdesign-icons-vue-next';
+
+const globalStore = useGlobalStore();
+const displayData = ref();
+const router = useRouter();
+
+onMounted(() => {
+  readConfig('index').then(res => {
+    displayData.value = res.data.content;
+  })
+})
+</script>
 <style lang="scss" >
 .app-home {
   .banner {
@@ -31,7 +84,7 @@
     @apply tw-my-5;
 
     h3 {
-      @apply tw-text-2xl tw-mb-10;
+      @apply tw-text-2xl tw-mb-2;
     }
   }
 }
