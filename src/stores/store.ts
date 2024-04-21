@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useMenuStore } from './useMenu'
 import { useUserStore } from './useUser'
 import { useStorageStore } from './useStorage'
+import { useMediaQuery } from '@vueuse/core'
 
 export const useGlobalStore = defineStore('global', () => {
   const menuStore = useMenuStore()
@@ -13,5 +14,7 @@ export const useGlobalStore = defineStore('global', () => {
 
   const setLoading = (val: boolean) => (isLoading.value = val)
 
-  return { menuStore, userStore, storageStore, isLoading, setLoading }
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
+  return { menuStore, userStore, storageStore, isLoading, isMobile, setLoading }
 })
