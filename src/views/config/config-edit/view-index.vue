@@ -1,10 +1,10 @@
 <template>
   <div class="config-create">
     <t-row class="tw-h-full">
-      <t-col flex="400px" class="tw-h-full">
+      <t-col :xs="12" :md="2" class="md:tw-h-full">
         <view-sidebar :is-create="isCreate" @confirm="confirmRequest"/>
       </t-col>
-      <t-col flex="auto" class="tw-h-full">
+      <t-col :xs="12" :md="10" class="tw-h-[900px] md:tw-h-full">
         <config-editor />
       </t-col>
     </t-row>
