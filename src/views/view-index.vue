@@ -72,7 +72,7 @@ onMounted(() => {
 <style lang="scss" >
 .app-home {
   .banner {
-    @apply tw-h-[500px] tw-flex tw-justify-center tw-items-center tw-bg-slate-100;
+    @apply tw-h-[300px] tw-flex tw-justify-center tw-items-center tw-bg-slate-100 md:tw-h-[500px];
 
     h2 {
       @apply tw-text-2xl tw-opacity-70 md:tw-text-3xl;
