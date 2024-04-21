@@ -2,7 +2,7 @@
   <t-dialog
     :header="`${actionText}站点`"
     :visible="visible"
-    width="600px"
+    :width="isMobile ? '90%' : 564"
     :footer="!readonly"
     :confirm-btn="{
       loading,
@@ -16,7 +16,7 @@
       </t-form-item>
 
       <t-form-item label="关联配置" name="configs">
-        <t-transfer v-model="siteData.configs" :disabled="configLoading" :data="configOptions" :operation="['移除', '加入']" :search="true">
+        <t-transfer v-model="siteData.configs" class="config-transfer" :disabled="configLoading" :data="configOptions" :operation="['移除', '加入']" :search="true">
           <template #title="props">
             <div>{{ props.type === 'target' ? '已关联' : '未关联' }}</div>
           </template>
@@ -35,6 +35,7 @@ import { computed, ref, reactive, watch, onUnmounted } from 'vue';
 import { useConfigList } from '@/hooks/useConfigList';
 import { createSite, updateSite } from '@/api/site';
 import { MessagePlugin } from 'tdesign-vue-next';
+import { useGlobalStore } from '@/stores/store';
 
 defineOptions({
   name: 'SiteEdit',
@@ -57,6 +58,8 @@ const emits = defineEmits<{
 }>();
 
 const { configList, configLoading, refreshConfigList } = useConfigList();
+
+const { isMobile } = useGlobalStore()
 
 const configOptions = computed(() => configList.value.map((c) => ({
   label: c.name,
@@ -151,3 +154,12 @@ const handleConfirm = async () => {
 
 onUnmounted(unwatch);
 </script>
+<style lang="scss" scoped>
+.config-transfer {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    row-gap: 10px;
+    width: 100%;
+  }
+}
+</style>
