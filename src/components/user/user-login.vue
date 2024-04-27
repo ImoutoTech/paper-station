@@ -9,6 +9,7 @@
 import { ENV } from '@/utils/env';
 
 const handleLogin = () => {
-  window.location.href = `${ENV.SSO}/callback/${ENV.SSO_ID}`
+  const redirect = `${window.location.origin}/login`
+  window.location.href = `${ENV.SSO}/oauth/authorize?client_id=${ENV.SSO_ID}&redirect_uri=${redirect}`
 }
 </script>
