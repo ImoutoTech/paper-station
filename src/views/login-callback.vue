@@ -50,13 +50,13 @@ const login = (ticket: string) => {
 }
 
 onMounted(() => {
-  const { ticket } = route.query;
-  if (!ticket) {
+  const { code } = route.query;
+  if (!code) {
     msg.value = '登录参数缺失';
     isError.value = true;
     return;
   }
 
-  login(ticket as string);
+  login(code as string);
 });
 </script>
