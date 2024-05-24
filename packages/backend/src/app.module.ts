@@ -1,10 +1,12 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_LIST } from '@/utils/const';
 import { AuthGuard, BusinessException, LoggerModule } from '@reus-able/nestjs';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { UserModule } from '@/module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -12,7 +14,15 @@ import { APP_GUARD, APP_PIPE } from '@nestjs/core';
       isGlobal: true,
       envFilePath: [...ENV_LIST],
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (cfg: ConfigService) => ({
+        uri: cfg.get<string>('MONGO_URL', ''),
+      }),
+    }),
     LoggerModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
