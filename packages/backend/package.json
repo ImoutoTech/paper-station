@@ -25,6 +25,7 @@
     "@reus-able/const": "^1.0.7",
     "@reus-able/nestjs": "^1.0.18",
     "@reus-able/types": "^1.0.5",
+    "axios": "^1.4.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "jsonwebtoken": "^9.0.2",

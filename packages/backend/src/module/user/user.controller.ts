@@ -1,6 +1,5 @@
-import { Controller, Get, Body, VERSION_NEUTRAL } from '@nestjs/common';
+import { Controller, Get, VERSION_NEUTRAL, Query } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from '../../dto/user/create-user.dto';
 
 @Controller({
   path: 'user',
@@ -10,8 +9,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('login')
-  login(@Body() body: CreateUserDto) {
-    return this.userService.login(body);
+  login(@Query('ticket') ticket: string) {
+    return this.userService.login(ticket);
   }
 
   @Get('data')
