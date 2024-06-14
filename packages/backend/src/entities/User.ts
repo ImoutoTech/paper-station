@@ -10,7 +10,7 @@ export class User {
   email: string;
 
   @Prop()
-  avatar: number;
+  avatar: string;
 
   @Prop()
   created_at: string;
