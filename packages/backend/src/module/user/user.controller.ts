@@ -1,5 +1,7 @@
 import { Controller, Get, VERSION_NEUTRAL, Query } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthRoles, UserParams } from '@reus-able/nestjs';
+import type { UserJwtPayload } from '@reus-able/types';
 
 @Controller({
   path: 'user',
@@ -14,7 +16,8 @@ export class UserController {
   }
 
   @Get('data')
-  findOne() {
-    return this.userService.findOne(0);
+  @AuthRoles('user')
+  findOne(@UserParams() user: UserJwtPayload) {
+    return this.userService.findOne(user.id);
   }
 }

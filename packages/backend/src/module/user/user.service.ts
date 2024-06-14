@@ -49,10 +49,11 @@ export class UserService {
     if (userInfo.code !== 0) {
       return userInfo;
     }
+
     return await this.userRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    return await this.userRepo.findOne({ id });
   }
 }
