@@ -4,6 +4,9 @@ import { User } from '@/entities';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { UserAPI } from '@/api';
+import { isNil } from 'lodash';
+import dayjs from 'dayjs';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UserService {
@@ -50,7 +53,50 @@ export class UserService {
       return userInfo;
     }
 
-    return await this.userRepo.find();
+    const { email, id, avatar } = userInfo.data;
+    const dbUser = await this.userRepo.findOne({ id });
+    if (isNil(dbUser)) {
+      const user = new this.userRepo({
+        id,
+        email,
+        avatar,
+        created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      });
+      await user.save();
+
+      return {
+        user: user.toObject(),
+        token: jwt.sign(
+          {
+            email,
+            id,
+          },
+          this.config.get<string>('TOKEN_SECRET'),
+          {
+            expiresIn: '3d',
+          },
+        ),
+      };
+    }
+
+    // 更新用户信息
+    dbUser.email = email;
+    dbUser.avatar = avatar;
+    await dbUser.save();
+
+    return {
+      user: dbUser,
+      token: jwt.sign(
+        {
+          email: dbUser.email,
+          id: dbUser.id,
+        },
+        this.config.get<string>('TOKEN_SECRET'),
+        {
+          expiresIn: '3d',
+        },
+      ),
+    };
   }
 
   async findOne(id: number) {
