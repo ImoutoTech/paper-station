@@ -22,6 +22,7 @@
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/mongoose": "^10.0.6",
     "@nestjs/platform-fastify": "^10.3.6",
+    "@nestjs/typeorm": "^10.0.2",
     "@reus-able/const": "^1.0.7",
     "@reus-able/nestjs": "^1.0.18",
     "@reus-able/types": "^1.0.5",
@@ -32,6 +33,8 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^8.4.0",
+    "mysql2": "^3.10.2",
+    "nestjs-typeorm-paginate": "^4.0.4",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1"
   },
