@@ -7,12 +7,12 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { ConfigEntity } from './Config';
+import { UserEntity } from './User';
 
 @Schema()
-export class User {
+export class Config {
   @Prop()
   id: number;
 
@@ -26,24 +26,24 @@ export class User {
   created_at: string;
 }
 
-export type UserDocument = HydratedDocument<User>;
+export type ConfigDocument = HydratedDocument<Config>;
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const ConfigSchema = SchemaFactory.createForClass(Config);
 
-export interface UserExportData {
+export interface ConfigExportData {
   id: number;
   name: string;
-  email: string;
-  avatar?: string;
-  configs?: ConfigEntity[];
+  slug: string;
+  owner?: UserEntity;
+  data: object;
   created_at: Date;
   updated_at: Date;
 }
 
 @Entity({
-  name: 'users',
+  name: 'configs',
 })
-export class UserEntity {
+export class ConfigEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -56,15 +56,16 @@ export class UserEntity {
     nullable: false,
     unique: true,
   })
-  email: string;
+  slug: string;
+
+  @ManyToOne(() => UserEntity, (u) => u.configs)
+  owner: UserEntity;
 
   @Column({
-    default: null,
+    type: 'json',
+    nullable: true,
   })
-  avatar: string;
-
-  @OneToMany(() => ConfigEntity, (c) => c.owner)
-  configs: ConfigEntity[];
+  data: object;
 
   @CreateDateColumn()
   created_at: Date;
@@ -72,13 +73,13 @@ export class UserEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  public getData(): UserExportData {
+  public getData(): ConfigExportData {
     return {
       id: this.id,
       name: this.name,
-      email: this.email,
-      avatar: this.avatar,
-      configs: this.configs,
+      data: this.data,
+      owner: this.owner,
+      slug: this.slug,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
