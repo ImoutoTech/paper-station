@@ -10,6 +10,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ConfigEntity } from './Config';
+import { SiteEntity } from './Site';
 
 @Schema()
 export class User {
@@ -36,6 +37,7 @@ export interface UserExportData {
   email: string;
   avatar?: string;
   configs?: ConfigEntity[];
+  sites?: SiteEntity[];
   created_at: Date;
   updated_at: Date;
 }
@@ -66,6 +68,9 @@ export class UserEntity {
   @OneToMany(() => ConfigEntity, (c) => c.owner)
   configs: ConfigEntity[];
 
+  @OneToMany(() => SiteEntity, (c) => c.owner)
+  sites: SiteEntity[];
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -79,6 +84,7 @@ export class UserEntity {
       email: this.email,
       avatar: this.avatar,
       configs: this.configs,
+      sites: this.sites,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };

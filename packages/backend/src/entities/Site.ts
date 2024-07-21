@@ -7,25 +7,26 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
   ManyToMany,
+  ManyToOne,
+  JoinTable,
 } from 'typeorm';
+import { ConfigEntity } from './Config';
 import { UserEntity } from './User';
-import { SiteEntity } from './Site';
 
 @Schema()
-export class Config {
-  @Prop()
-  id: number;
-
-  @Prop()
-  slug: string;
-
-  @Prop()
-  data: string;
+export class Site {
+  @Prop([String])
+  domains: string[];
 
   @Prop()
   owner: number;
+
+  @Prop()
+  name: string;
+
+  @Prop([Number])
+  configs: number[];
 
   @Prop()
   created_at: string;
@@ -34,24 +35,24 @@ export class Config {
   updated_at: string;
 }
 
-export type ConfigDocument = HydratedDocument<Config>;
+export type SiteDocument = HydratedDocument<Site>;
 
-export const ConfigSchema = SchemaFactory.createForClass(Config);
+export const SiteSchema = SchemaFactory.createForClass(Site);
 
-export interface ConfigExportData {
+export interface SiteExportData {
   id: number;
   name: string;
-  slug: string;
   owner?: UserEntity;
-  data: object;
+  domains: string[];
+  configs?: ConfigEntity[];
   created_at: Date;
   updated_at: Date;
 }
 
 @Entity({
-  name: 'configs',
+  name: 'users',
 })
-export class ConfigEntity {
+export class SiteEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -61,22 +62,16 @@ export class ConfigEntity {
   name: string;
 
   @Column({
-    nullable: false,
-    unique: true,
+    type: 'simple-array',
   })
-  slug: string;
+  domains: string[];
 
-  @ManyToOne(() => UserEntity, (u) => u.configs)
+  @ManyToOne(() => UserEntity, (u) => u.sites)
   owner: UserEntity;
 
-  @Column({
-    type: 'json',
-    nullable: true,
-  })
-  data: object;
-
-  @ManyToMany(() => SiteEntity, (s) => s.configs)
-  sites: SiteEntity[];
+  @ManyToMany(() => ConfigEntity, (c) => c.sites)
+  @JoinTable()
+  configs: ConfigEntity[];
 
   @CreateDateColumn()
   created_at: Date;
@@ -84,13 +79,13 @@ export class ConfigEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  public getData(): ConfigExportData {
+  public getData(): SiteExportData {
     return {
       id: this.id,
       name: this.name,
-      data: this.data,
       owner: this.owner,
-      slug: this.slug,
+      domains: this.domains,
+      configs: this.configs,
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
