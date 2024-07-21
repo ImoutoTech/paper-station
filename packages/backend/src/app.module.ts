@@ -7,6 +7,8 @@ import { AuthGuard, BusinessException, LoggerModule } from '@reus-able/nestjs';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { UserModule } from '@/module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ENTITY_LIST } from '@/entities';
 
 @Module({
   imports: [
@@ -19,6 +21,20 @@ import { MongooseModule } from '@nestjs/mongoose';
       inject: [ConfigService],
       useFactory: async (cfg: ConfigService) => ({
         uri: cfg.get<string>('MONGO_URL', ''),
+      }),
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (cfg: ConfigService) => ({
+        type: 'mysql',
+        host: cfg.get('MYSQL_SERVER', 'localhost'),
+        port: cfg.get<number>('MYSQL_PORT', 3306),
+        username: cfg.get('MYSQL_USER', 'root'),
+        password: cfg.get('MYSQL_PASSWORD', 'root'),
+        database: cfg.get('MYSQL_DATABASE', 'ware-house'),
+        synchronize: true,
+        entities: [...ENTITY_LIST],
       }),
     }),
     LoggerModule,
