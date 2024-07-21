@@ -17,13 +17,19 @@ export class Config {
   id: number;
 
   @Prop()
-  email: string;
+  slug: string;
 
   @Prop()
-  avatar: string;
+  data: string;
+
+  @Prop()
+  owner: number;
 
   @Prop()
   created_at: string;
+
+  @Prop()
+  updated_at: string;
 }
 
 export type ConfigDocument = HydratedDocument<Config>;
