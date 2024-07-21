@@ -50,7 +50,7 @@ export interface SiteExportData {
 }
 
 @Entity({
-  name: 'users',
+  name: 'sites',
 })
 export class SiteEntity {
   @PrimaryGeneratedColumn()
