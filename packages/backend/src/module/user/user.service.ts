@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@/entities';
 import { Model } from 'mongoose';
@@ -7,11 +7,15 @@ import { UserAPI } from '@/api';
 import { isNil } from 'lodash';
 import dayjs from 'dayjs';
 import * as jwt from 'jsonwebtoken';
+import { HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
 
 @Injectable()
 export class UserService {
   @InjectModel(User.name)
   private userRepo: Model<User>;
+
+  @Inject(HLOGGER_TOKEN)
+  private logger: HLogger;
 
   private userApi: ReturnType<typeof UserAPI>;
 
@@ -26,7 +30,16 @@ export class UserService {
     this.userApi = UserAPI(apiEnv);
   }
 
+  private log(text: string) {
+    this.logger.log(text, UserService.name);
+  }
+
+  private warn(text: string) {
+    this.logger.warn(text, UserService.name);
+  }
+
   async login(ticket: string) {
+    this.log(`ticket尝试登录: ${ticket}`);
     const tokenRes = await this.userApi
       .authorizeToken(ticket)
       .then((res) => {
@@ -37,6 +50,7 @@ export class UserService {
       });
 
     if (tokenRes.code !== 0) {
+      this.warn(`登录失败: ${tokenRes?.msg}`);
       return tokenRes;
     }
 
@@ -50,6 +64,7 @@ export class UserService {
       });
 
     if (userInfo.code !== 0) {
+      this.warn(`登录失败: ${userInfo?.msg}`);
       return userInfo;
     }
 
@@ -63,6 +78,8 @@ export class UserService {
         created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
       await user.save();
+
+      this.log(`新用户#${id}登录，创建新记录`);
 
       return {
         user: user.toObject(),
@@ -84,6 +101,8 @@ export class UserService {
     dbUser.avatar = avatar;
     await dbUser.save();
 
+    this.log(`用户#${id}登录成功`);
+
     return {
       user: dbUser,
       token: jwt.sign(
@@ -100,6 +119,7 @@ export class UserService {
   }
 
   async findOne(id: number) {
+    this.log(`获取用户#${id}信息`);
     return await this.userRepo.findOne({ id });
   }
 }
