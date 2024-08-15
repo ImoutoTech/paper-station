@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from '@/entities';
-import { Model } from 'mongoose';
+import { UserEntity } from '@/entities';
 import { ConfigService } from '@nestjs/config';
 import { UserAPI } from '@/api';
 import { isNil } from 'lodash';
 import dayjs from 'dayjs';
 import * as jwt from 'jsonwebtoken';
 import { HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
-  @InjectModel(User.name)
-  private userRepo: Model<User>;
+  @InjectRepository(UserEntity)
+  private userRepo: Repository<UserEntity>;
 
   @Inject(HLOGGER_TOKEN)
   private logger: HLogger;
@@ -69,20 +69,21 @@ export class UserService {
     }
 
     const { email, id, avatar } = userInfo.data;
-    const dbUser = await this.userRepo.findOne({ id });
+    const dbUser = await this.userRepo.findOne({ where: { ssoId: id } });
     if (isNil(dbUser)) {
-      const user = new this.userRepo({
-        id,
+      const user = this.userRepo.create({
+        ssoId: id,
         email,
         avatar,
         created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
-      await user.save();
+
+      await this.userRepo.save(user);
 
       this.log(`新用户#${id}登录，创建新记录`);
 
       return {
-        user: user.toObject(),
+        user: user.getData(),
         token: jwt.sign(
           {
             email,
@@ -99,7 +100,7 @@ export class UserService {
     // 更新用户信息
     dbUser.email = email;
     dbUser.avatar = avatar;
-    await dbUser.save();
+    await this.userRepo.save(dbUser);
 
     this.log(`用户#${id}登录成功`);
 
@@ -120,6 +121,6 @@ export class UserService {
 
   async findOne(id: number) {
     this.log(`获取用户#${id}信息`);
-    return await this.userRepo.findOne({ id });
+    return await this.userRepo.findOne({ where: { id } });
   }
 }

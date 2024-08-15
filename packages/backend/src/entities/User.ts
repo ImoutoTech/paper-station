@@ -56,7 +56,7 @@ export class UserEntity {
 
   @Column({
     nullable: false,
-    unique: true,
+    unique: false,
   })
   email: string;
 
@@ -64,6 +64,12 @@ export class UserEntity {
     default: null,
   })
   avatar: string;
+
+  @Column({
+    nullable: false,
+    unique: true,
+  })
+  ssoId: number;
 
   @OneToMany(() => ConfigEntity, (c) => c.owner)
   configs: ConfigEntity[];
