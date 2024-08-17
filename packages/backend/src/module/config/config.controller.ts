@@ -7,11 +7,15 @@ import {
   Param,
   Delete,
   VERSION_NEUTRAL,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import { CreateConfigDto } from '../../dto/config/create-config.dto';
 import { UpdateConfigDto } from '../../dto/config/update-config.dto';
-import { AuthRoles } from '@reus-able/nestjs';
+import { AuthRoles, UserParams } from '@reus-able/nestjs';
+import { UserJwtPayload } from '@reus-able/types';
 
 @Controller({
   path: 'config',
@@ -28,8 +32,13 @@ export class ConfigController {
 
   @Get()
   @AuthRoles('user')
-  findAll() {
-    return this.configService.findAll();
+  findAll(
+    @Query('offset', new DefaultValuePipe(1), ParseIntPipe) offset = 0,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('search') search = '',
+    @UserParams() user: UserJwtPayload,
+  ) {
+    return this.configService.findAll(user.id, offset, limit, search);
   }
 
   @Get(':slug')

@@ -1,6 +1,3 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,37 +10,12 @@ import {
 import { UserEntity } from './User';
 import { SiteEntity } from './Site';
 
-@Schema()
-export class Config {
-  @Prop()
-  id: number;
-
-  @Prop()
-  slug: string;
-
-  @Prop()
-  data: string;
-
-  @Prop()
-  owner: number;
-
-  @Prop()
-  created_at: string;
-
-  @Prop()
-  updated_at: string;
-}
-
-export type ConfigDocument = HydratedDocument<Config>;
-
-export const ConfigSchema = SchemaFactory.createForClass(Config);
-
 export interface ConfigExportData {
   id: number;
   name: string;
   slug: string;
-  owner?: UserEntity;
-  data: object;
+  owner?: number;
+  data: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -88,8 +60,8 @@ export class ConfigEntity {
     return {
       id: this.id,
       name: this.name,
-      data: this.data,
-      owner: this.owner,
+      data: JSON.stringify(this.data),
+      owner: this.owner.ssoId,
       slug: this.slug,
       created_at: this.created_at,
       updated_at: this.updated_at,
