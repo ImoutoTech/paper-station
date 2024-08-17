@@ -14,14 +14,14 @@
           :options="editorConfig.options"
           :language="editorConfig.language"
           @update:value="configStore.updateContent"
-          @mount="editor = $event"
+          @mount="handleMountedEditor"
         />
       </t-card>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, shallowRef, onMounted } from 'vue';
+import { reactive, shallowRef, onMounted, nextTick } from 'vue';
 import { useConfigStore } from './store';
 import { useGlobalStore } from '@/stores/store';
 import type { EditorConfig } from '@/types';
@@ -29,11 +29,12 @@ import EditorConfigDialog from './editor-config-dialog.vue';
 import { cloneDeep } from 'lodash-es';
 
 import { LANGUAGE_OPTIONS, DEFAULT_EDITOR_CONFIG } from './constants';
+import type { editor } from 'monaco-editor';
 
 const configStore = useConfigStore();
 const globalStore = useGlobalStore();
 
-const editor = shallowRef();
+const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
 
 const editorConfig = reactive<EditorConfig>(cloneDeep(DEFAULT_EDITOR_CONFIG));
 
@@ -45,6 +46,13 @@ const saveEditorConfig = () => {
 const handleConfirmEditor = (data: EditorConfig) => {
   Object.assign(editorConfig, DEFAULT_EDITOR_CONFIG, data);
   saveEditorConfig();
+}
+
+const handleMountedEditor = async  (instance: editor.IStandaloneCodeEditor) => {
+  editorRef.value = instance
+  editorRef.value.onDidBlurEditorText(() => {
+    editorRef.value?.trigger('', 'editor.action.format', {})
+  })
 }
 
 onMounted(async () => {
