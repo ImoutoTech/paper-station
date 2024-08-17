@@ -5,7 +5,7 @@ import { UserAPI } from '@/api';
 import { isNil } from 'lodash';
 import dayjs from 'dayjs';
 import * as jwt from 'jsonwebtoken';
-import { HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import { BusinessException, HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -121,6 +121,12 @@ export class UserService {
 
   async findOne(id: number) {
     this.log(`获取用户#${id}信息`);
-    return await this.userRepo.findOne({ where: { id } });
+
+    const user = await this.userRepo.findOne({ where: { ssoId: id } });
+    if (isNil(user)) {
+      throw new BusinessException('id错误');
+    }
+
+    return user.getData();
   }
 }
