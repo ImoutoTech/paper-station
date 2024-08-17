@@ -3,7 +3,7 @@ import type { ConfigItem, Restful, ConfigCreateParam, RestfulPage } from '@/type
 import qs from 'qs'
 
 export const getUserConfig = (offset: number, limit: number, search?: string) =>
-  API.get<RestfulPage<ConfigItem>>('/config/', {
+  API.get<RestfulPage<ConfigItem>>('/config', {
     params: {
       offset,
       limit,
@@ -12,7 +12,7 @@ export const getUserConfig = (offset: number, limit: number, search?: string) =>
   })
 
 export const createConfig = (data: ConfigCreateParam) =>
-  API.post<Restful<ConfigItem>>('/config/', qs.stringify(data))
+  API.post<Restful<ConfigItem>>('/config', qs.stringify(data))
 
 export const getConfig = (slug: string) => API.get<Restful<ConfigItem>>(`/config/${slug}`)
 
