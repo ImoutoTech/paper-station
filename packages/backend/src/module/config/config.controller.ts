@@ -43,8 +43,8 @@ export class ConfigController {
 
   @Get(':slug')
   @AuthRoles('user')
-  findOne(@Param('slug') slug: string) {
-    return this.configService.findOne(slug);
+  findOne(@Param('slug') slug: string, @UserParams() user: UserJwtPayload) {
+    return this.configService.findOne(slug, user.id);
   }
 
   @Patch(':id')

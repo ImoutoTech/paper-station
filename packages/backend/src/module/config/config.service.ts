@@ -4,7 +4,8 @@ import { ConfigEntity, UserEntity } from '@/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
-import { HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import { BusinessException, HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class ConfigService {
@@ -54,8 +55,22 @@ export class ConfigService {
     };
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} config`;
+  async findOne(slug: string, ssoId: number) {
+    const cfg = await this.cfgRepo.findOne({
+      relations: { owner: true },
+      where: {
+        slug,
+        owner: {
+          ssoId,
+        },
+      },
+    });
+
+    if (isNil(cfg)) {
+      throw new BusinessException('无效slug');
+    }
+
+    return cfg.getData();
   }
 
   update(id: string, updateConfigDto: UpdateConfigDto) {
