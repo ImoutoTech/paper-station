@@ -85,7 +85,7 @@ export class UserEntity {
 
   public getData(): UserExportData {
     return {
-      id: this.id,
+      id: this.ssoId,
       name: this.name,
       email: this.email,
       avatar: this.avatar,

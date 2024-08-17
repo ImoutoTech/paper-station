@@ -105,11 +105,11 @@ export class UserService {
     this.log(`用户#${id}登录成功`);
 
     return {
-      user: dbUser,
+      user: dbUser.getData(),
       token: jwt.sign(
         {
           email: dbUser.email,
-          id: dbUser.id,
+          id: dbUser.ssoId,
         },
         this.config.get<string>('TOKEN_SECRET'),
         {
