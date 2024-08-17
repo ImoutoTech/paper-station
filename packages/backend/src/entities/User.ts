@@ -1,6 +1,3 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -11,25 +8,6 @@ import {
 } from 'typeorm';
 import { ConfigEntity } from './Config';
 import { SiteEntity } from './Site';
-
-@Schema()
-export class User {
-  @Prop()
-  id: number;
-
-  @Prop()
-  email: string;
-
-  @Prop()
-  avatar: string;
-
-  @Prop()
-  created_at: string;
-}
-
-export type UserDocument = HydratedDocument<User>;
-
-export const UserSchema = SchemaFactory.createForClass(User);
 
 export interface UserExportData {
   id: number;
