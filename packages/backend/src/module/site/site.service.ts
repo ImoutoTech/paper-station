@@ -4,13 +4,9 @@ import { ConfigEntity, SiteEntity, UserEntity } from '@/entities';
 import { In, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
-import {
-  BusinessException,
-  HLogger,
-  HLOGGER_TOKEN,
-  RedisService,
-} from '@reus-able/nestjs';
+import { BusinessException, HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
 import { isNil } from 'lodash';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class SiteService {
@@ -26,34 +22,15 @@ export class SiteService {
   @Inject(HLOGGER_TOKEN)
   private logger: HLogger;
 
+  @Inject(EventEmitter2)
+  private emitter: EventEmitter2;
+
   private log(text: string) {
     this.logger.log(text, SiteService.name);
   }
 
   private warn(text: string) {
     this.logger.warn(text, SiteService.name);
-  }
-
-  @Inject(RedisService)
-  private cache: RedisService;
-
-  async updateCache(slugs: string[]) {
-    const configs = await this.cfgRepo.find({
-      relations: { sites: true },
-      where: { slug: In(slugs) },
-    });
-
-    for (const config of configs) {
-      const domains = config.sites.map((s) => s.domains).flat();
-      if (domains.length) {
-        await this.cache.jsonSet(`config-${config.slug}`, {
-          domains,
-          data: config.data,
-        });
-      } else {
-        await this.cache.del(`config-${config.slug}`);
-      }
-    }
   }
 
   async create(body: CreateSiteDto, ssoId: number) {
@@ -71,7 +48,9 @@ export class SiteService {
 
     await this.siteRepo.save(newSite);
     this.log(`用户#${ssoId}创建了新的站点${newSite.name}`);
-    await this.updateCache(newSite.configs.map((c) => c.slug));
+    this.emitter.emit('updateConfigs', {
+      slugs: newSite.configs.map((c) => c.slug),
+    });
 
     return null;
   }
@@ -150,7 +129,9 @@ export class SiteService {
 
     await this.siteRepo.save(site);
     this.warn(`用户#${ssoId}编辑站点${id}成功`);
-    await this.updateCache(site.configs.map((c) => c.slug));
+    this.emitter.emit('updateConfigs', {
+      slugs: site.configs.map((c) => c.slug),
+    });
 
     return null;
   }
@@ -174,7 +155,9 @@ export class SiteService {
     const configs = site.configs.map((c) => c.slug);
     await this.siteRepo.remove(site);
     this.log(`用户#${ssoId}删除站点${id}`);
-    await this.updateCache(configs);
+    this.emitter.emit('updateConfigs', {
+      slugs: configs,
+    });
 
     return null;
   }

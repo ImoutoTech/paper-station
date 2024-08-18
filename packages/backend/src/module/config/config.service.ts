@@ -6,6 +6,7 @@ import { Like, Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { BusinessException, HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
 import { isNil } from 'lodash';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class ConfigService {
@@ -17,6 +18,9 @@ export class ConfigService {
 
   @Inject(HLOGGER_TOKEN)
   private logger: HLogger;
+
+  @Inject(EventEmitter2)
+  private emitter: EventEmitter2;
 
   private log(text: string) {
     this.logger.log(text, ConfigService.name);
@@ -108,6 +112,9 @@ export class ConfigService {
     cfg.name = body.name;
     await this.cfgRepo.save(cfg);
     this.log(`用户#${ssoId}编辑配置${slug}成功`);
+    this.emitter.emit('updateConfigs', {
+      slugs: [slug],
+    });
 
     return cfg.getData();
   }
@@ -130,6 +137,9 @@ export class ConfigService {
 
     await this.cfgRepo.remove(cfg);
     this.log(`用户#${ssoId}删除配置${slug}`);
+    this.emitter.emit('deleteConfigs', {
+      slugs: [slug],
+    });
 
     return null;
   }

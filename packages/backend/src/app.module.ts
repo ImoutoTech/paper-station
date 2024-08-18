@@ -10,7 +10,13 @@ import {
   RedisModule,
 } from '@reus-able/nestjs';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
-import { UserModule, ConfigModule as PaperModule, SiteModule } from '@/module';
+import {
+  UserModule,
+  ConfigModule as PaperModule,
+  SiteModule,
+  CacheModule,
+} from '@/module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ENTITY_LIST } from '@/entities';
 
@@ -39,6 +45,8 @@ import { ENTITY_LIST } from '@/entities';
     PaperModule,
     SiteModule,
     RedisModule,
+    CacheModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [
