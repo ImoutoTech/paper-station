@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   VERSION_NEUTRAL,
@@ -11,6 +10,7 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   Query,
+  Put,
 } from '@nestjs/common';
 import { SiteService } from './site.service';
 import { CreateSiteDto, UpdateSiteDto } from '@/dto';
@@ -51,7 +51,7 @@ export class SiteController {
     return this.siteService.findOne(+id, user.id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @AuthRoles('user')
   update(
     @Param('id') id: string,

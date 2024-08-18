@@ -4,7 +4,8 @@ import { ConfigEntity, SiteEntity, UserEntity } from '@/entities';
 import { In, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
-import { HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import { BusinessException, HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class SiteService {
@@ -44,7 +45,7 @@ export class SiteService {
     await this.siteRepo.save(newSite);
     this.log(`用户#${ssoId}创建了新的站点${newSite.name}`);
 
-    return newSite.getData();
+    return null;
   }
 
   async findAll(ssoId: number, offset: number, limit: number, search = '') {
@@ -77,7 +78,35 @@ export class SiteService {
   }
 
   async update(id: number, body: UpdateSiteDto, ssoId: number) {
-    return `This action updates a #${id} site`;
+    const site = await this.siteRepo.findOne({
+      where: {
+        id,
+        owner: {
+          ssoId,
+        },
+      },
+      relations: { owner: true },
+    });
+
+    if (isNil(site)) {
+      this.warn(`用户#${ssoId}编辑站点${id}失败，无该站点`);
+      throw new BusinessException('无效站点id');
+    }
+
+    const configs = await this.cfgRepo.find({
+      where: {
+        slug: In(body.configs.split(',')),
+      },
+    });
+
+    site.configs = configs;
+    site.name = body.name;
+    site.domains = body.domains.split(',');
+
+    await this.siteRepo.save(site);
+    this.warn(`用户#${ssoId}编辑站点${id}成功`);
+
+    return null;
   }
 
   async remove(id: number, ssoId: number) {
