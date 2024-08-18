@@ -3,7 +3,7 @@ import type { SiteItem, Restful, SiteCreateParam, RestfulPage } from '@/types'
 import qs from 'qs'
 
 export const getUserSite = (offset: number, limit: number, search?: string) =>
-  API.get<RestfulPage<SiteItem>>('/site/', {
+  API.get<RestfulPage<SiteItem>>('/site', {
     params: {
       offset,
       limit,
@@ -18,7 +18,7 @@ export const createSite = (data: SiteCreateParam) => {
     configs: data.configs.join(',')
   }
 
-  return API.post<Restful<SiteItem>>('/site/', qs.stringify(body))
+  return API.post<Restful<SiteItem>>('/site', qs.stringify(body))
 }
 
 export const getSite = (id: string) => API.get<Restful<SiteItem>>(`/site/${id}`)
