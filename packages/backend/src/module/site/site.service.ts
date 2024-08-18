@@ -74,7 +74,22 @@ export class SiteService {
   }
 
   async findOne(id: number, ssoId: number) {
-    return `This action returns a #${id} site`;
+    const site = await this.siteRepo.findOne({
+      where: {
+        id,
+        owner: {
+          ssoId,
+        },
+      },
+      relations: { owner: true, configs: true },
+    });
+
+    if (isNil(site)) {
+      this.warn(`用户#${ssoId}获取站点${id}失败，无该站点`);
+      throw new BusinessException('无效站点id');
+    }
+
+    return site.getData();
   }
 
   async update(id: number, body: UpdateSiteDto, ssoId: number) {
