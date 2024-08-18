@@ -60,7 +60,7 @@ export class ConfigEntity {
     return {
       id: this.id,
       name: this.name,
-      data: JSON.stringify(this.data),
+      data: JSON.stringify(this.data, null, '\t'),
       owner: this.owner.ssoId,
       slug: this.slug,
       created_at: this.created_at,

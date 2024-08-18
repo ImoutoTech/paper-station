@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, shallowRef, onMounted, nextTick } from 'vue';
+import { reactive, shallowRef, onMounted } from 'vue';
 import { useConfigStore } from './store';
 import { useGlobalStore } from '@/stores/store';
 import type { EditorConfig } from '@/types';
@@ -48,11 +48,8 @@ const handleConfirmEditor = (data: EditorConfig) => {
   saveEditorConfig();
 }
 
-const handleMountedEditor = async  (instance: editor.IStandaloneCodeEditor) => {
+const handleMountedEditor = async (instance: editor.IStandaloneCodeEditor) => {
   editorRef.value = instance
-  editorRef.value.onDidBlurEditorText(() => {
-    editorRef.value?.trigger('', 'editor.action.format', {})
-  })
 }
 
 onMounted(async () => {

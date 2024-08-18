@@ -67,8 +67,11 @@ export class ConfigService {
     });
 
     if (isNil(cfg)) {
+      this.log(`获取用户#${ssoId}获取配置${slug}详情失败，无该配置`);
       throw new BusinessException('无效slug');
     }
+
+    this.log(`获取用户#${ssoId}获取配置${slug}详情`);
 
     return cfg.getData();
   }
