@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_LIST } from '@/utils/const';
 import { AuthGuard, BusinessException, LoggerModule } from '@reus-able/nestjs';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
-import { UserModule, ConfigModule as PaperModule } from '@/module';
+import { UserModule, ConfigModule as PaperModule, SiteModule } from '@/module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ENTITY_LIST } from '@/entities';
@@ -40,6 +40,7 @@ import { ENTITY_LIST } from '@/entities';
     LoggerModule,
     UserModule,
     PaperModule,
+    SiteModule,
   ],
   controllers: [AppController],
   providers: [
