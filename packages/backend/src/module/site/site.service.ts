@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateSiteDto, UpdateSiteDto } from '@/dto';
 import { ConfigEntity, SiteEntity, UserEntity } from '@/entities';
-import { Like, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
@@ -29,7 +29,22 @@ export class SiteService {
   }
 
   async create(body: CreateSiteDto, ssoId: number) {
-    return 'This action adds a new site';
+    const owner = await this.userRepo.findOneBy({ ssoId });
+    const configs = await this.cfgRepo.findBy({
+      slug: In(body.configs.split(',')),
+    });
+
+    const newSite = this.siteRepo.create({
+      name: body.name,
+      domains: body.domains.split(','),
+      configs,
+      owner,
+    });
+
+    await this.siteRepo.save(newSite);
+    this.log(`用户#${ssoId}创建了新的站点${newSite.name}`);
+
+    return newSite.getData();
   }
 
   async findAll(ssoId: number, offset: number, limit: number, search = '') {
@@ -51,11 +66,7 @@ export class SiteService {
     );
 
     return {
-      items: items.map((site) => ({
-        ...site.getData(),
-        owner: site.owner.ssoId,
-        configs: site.configs.map((cfg) => cfg.slug),
-      })),
+      items: items.map((site) => site.getData()),
       count: meta.totalItems,
       total: meta.totalItems,
     };

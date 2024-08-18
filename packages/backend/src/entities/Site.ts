@@ -14,9 +14,9 @@ import { UserEntity } from './User';
 export interface SiteExportData {
   id: number;
   name: string;
-  owner?: UserEntity;
+  owner?: number;
   domains: string[];
-  configs?: ConfigEntity[];
+  configs?: string[];
   created_at: Date;
   updated_at: Date;
 }
@@ -55,9 +55,9 @@ export class SiteEntity {
     return {
       id: this.id,
       name: this.name,
-      owner: this.owner,
+      owner: this.owner.ssoId,
       domains: this.domains,
-      configs: this.configs,
+      configs: this.configs.map((cfg) => cfg.slug),
       created_at: this.created_at,
       updated_at: this.updated_at,
     };
