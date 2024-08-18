@@ -4,7 +4,12 @@ import { ConfigEntity, SiteEntity, UserEntity } from '@/entities';
 import { In, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
-import { BusinessException, HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import {
+  BusinessException,
+  HLogger,
+  HLOGGER_TOKEN,
+  RedisService,
+} from '@reus-able/nestjs';
 import { isNil } from 'lodash';
 
 @Injectable()
@@ -29,6 +34,28 @@ export class SiteService {
     this.logger.warn(text, SiteService.name);
   }
 
+  @Inject(RedisService)
+  private cache: RedisService;
+
+  async updateCache(slugs: string[]) {
+    const configs = await this.cfgRepo.find({
+      relations: { sites: true },
+      where: { slug: In(slugs) },
+    });
+
+    for (const config of configs) {
+      const domains = config.sites.map((s) => s.domains).flat();
+      if (domains.length) {
+        await this.cache.jsonSet(`config-${config.slug}`, {
+          domains,
+          data: config.data,
+        });
+      } else {
+        await this.cache.del(`config-${config.slug}`);
+      }
+    }
+  }
+
   async create(body: CreateSiteDto, ssoId: number) {
     const owner = await this.userRepo.findOneBy({ ssoId });
     const configs = await this.cfgRepo.findBy({
@@ -44,6 +71,7 @@ export class SiteService {
 
     await this.siteRepo.save(newSite);
     this.log(`用户#${ssoId}创建了新的站点${newSite.name}`);
+    await this.updateCache(newSite.configs.map((c) => c.slug));
 
     return null;
   }
@@ -122,6 +150,7 @@ export class SiteService {
 
     await this.siteRepo.save(site);
     this.warn(`用户#${ssoId}编辑站点${id}成功`);
+    await this.updateCache(site.configs.map((c) => c.slug));
 
     return null;
   }
@@ -134,7 +163,7 @@ export class SiteService {
           ssoId,
         },
       },
-      relations: { owner: true },
+      relations: { owner: true, configs: true },
     });
 
     if (isNil(site)) {
@@ -142,8 +171,10 @@ export class SiteService {
       throw new BusinessException('无效站点id');
     }
 
+    const configs = site.configs.map((c) => c.slug);
     await this.siteRepo.remove(site);
     this.log(`用户#${ssoId}删除站点${id}`);
+    await this.updateCache(configs);
 
     return null;
   }
