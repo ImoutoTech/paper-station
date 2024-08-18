@@ -3,7 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_LIST } from '@/utils/const';
-import { AuthGuard, BusinessException, LoggerModule } from '@reus-able/nestjs';
+import {
+  AuthGuard,
+  BusinessException,
+  LoggerModule,
+  RedisModule,
+} from '@reus-able/nestjs';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { UserModule, ConfigModule as PaperModule, SiteModule } from '@/module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -33,6 +38,7 @@ import { ENTITY_LIST } from '@/entities';
     UserModule,
     PaperModule,
     SiteModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [
