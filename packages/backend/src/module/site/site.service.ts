@@ -39,7 +39,7 @@ export class SiteService {
       { page, limit },
       {
         where: { name: Like(`%${search}%`), owner: { ssoId } },
-        relations: { owner: true },
+        relations: { owner: true, configs: true },
         order: {
           created_at: 'ASC',
         },
@@ -51,9 +51,10 @@ export class SiteService {
     );
 
     return {
-      items: items.map((cfg) => ({
-        ...cfg.getData(),
-        owner: cfg.owner.ssoId,
+      items: items.map((site) => ({
+        ...site.getData(),
+        owner: site.owner.ssoId,
+        configs: site.configs.map((cfg) => cfg.slug),
       })),
       count: meta.totalItems,
       total: meta.totalItems,
