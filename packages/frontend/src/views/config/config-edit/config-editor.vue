@@ -15,6 +15,7 @@
           :language="editorConfig.language"
           @update:value="configStore.updateContent"
           @mount="handleMountedEditor"
+          @validate="handleValidate"
         />
       </t-card>
     </div>
@@ -50,6 +51,10 @@ const handleConfirmEditor = (data: EditorConfig) => {
 
 const handleMountedEditor = async (instance: editor.IStandaloneCodeEditor) => {
   editorRef.value = instance
+}
+
+const handleValidate = (e: editor.IMarker[]) => {
+  configStore.setValidate(!e.length)
 }
 
 onMounted(async () => {

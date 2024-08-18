@@ -43,6 +43,7 @@ declare module 'vue' {
     TSpace: typeof import('tdesign-vue-next')['Space']
     TTag: typeof import('tdesign-vue-next')['Tag']
     TTagInput: typeof import('tdesign-vue-next')['TagInput']
+    TTooltip: typeof import('tdesign-vue-next')['Tooltip']
     TTransfer: typeof import('tdesign-vue-next')['Transfer']
     UserLogin: typeof import('./src/components/user/user-login.vue')['default']
     UserMeta: typeof import('./src/components/user/user-meta.vue')['default']
