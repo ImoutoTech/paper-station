@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateSiteDto, UpdateSiteDto } from '@/dto';
 import { ConfigEntity, SiteEntity, UserEntity } from '@/entities';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate } from 'nestjs-typeorm-paginate';
+import { HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
 
 @Injectable()
 export class SiteService {
@@ -15,12 +17,47 @@ export class SiteService {
   @InjectRepository(ConfigEntity)
   private cfgRepo: Repository<ConfigEntity>;
 
+  @Inject(HLOGGER_TOKEN)
+  private logger: HLogger;
+
+  private log(text: string) {
+    this.logger.log(text, SiteService.name);
+  }
+
+  private warn(text: string) {
+    this.logger.warn(text, SiteService.name);
+  }
+
   async create(body: CreateSiteDto, ssoId: number) {
     return 'This action adds a new site';
   }
 
   async findAll(ssoId: number, offset: number, limit: number, search = '') {
-    return `This action returns all site`;
+    const page = offset / limit || 1;
+    const { items, meta } = await paginate<SiteEntity>(
+      this.siteRepo,
+      { page, limit },
+      {
+        where: { name: Like(`%${search}%`), owner: { ssoId } },
+        relations: { owner: true },
+        order: {
+          created_at: 'ASC',
+        },
+      },
+    );
+
+    this.log(
+      `获取用户#${ssoId}站点列表(page=${page}, size=${limit}, search=${search})，共查询到${meta.totalItems}条结果`,
+    );
+
+    return {
+      items: items.map((cfg) => ({
+        ...cfg.getData(),
+        owner: cfg.owner.ssoId,
+      })),
+      count: meta.totalItems,
+      total: meta.totalItems,
+    };
   }
 
   async findOne(id: number, ssoId: number) {
