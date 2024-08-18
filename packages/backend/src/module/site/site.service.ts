@@ -15,23 +15,23 @@ export class SiteService {
   @InjectRepository(ConfigEntity)
   private cfgRepo: Repository<ConfigEntity>;
 
-  create(createSiteDto: CreateSiteDto) {
+  async create(body: CreateSiteDto, ssoId: number) {
     return 'This action adds a new site';
   }
 
-  findAll() {
+  async findAll(ssoId: number, offset: number, limit: number, search = '') {
     return `This action returns all site`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number, ssoId: number) {
     return `This action returns a #${id} site`;
   }
 
-  update(id: number, updateSiteDto: UpdateSiteDto) {
+  async update(id: number, body: UpdateSiteDto, ssoId: number) {
     return `This action updates a #${id} site`;
   }
 
-  remove(id: number) {
+  async remove(id: number, ssoId: number) {
     return `This action removes a #${id} site`;
   }
 }
