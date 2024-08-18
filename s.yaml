@@ -19,7 +19,6 @@ resources:
       runtime: custom.debian10
       cpu: 0.35
       diskSize: 512
-      caPort: 4000
       memorySize: 512
       timeout: 6
       layers:
