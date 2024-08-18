@@ -63,7 +63,7 @@ const { isMobile } = useGlobalStore()
 
 const configOptions = computed(() => configList.value.map((c) => ({
   label: c.name,
-  value: c._id,
+  value: c.slug,
 })))
 
 const actionText = computed(() => props.isCreate ? '创建' : '编辑');
@@ -135,7 +135,7 @@ const handleConfirm = async () => {
   loading.value = true;
   const result = props.isCreate ?
     createSite({...siteData}) :
-    updateSite((props.site as SiteItem)._id, {...siteData});
+    updateSite((props.site as SiteItem).id, {...siteData});
 
   result.then((res) => {
     if (res.data.code === 0) {

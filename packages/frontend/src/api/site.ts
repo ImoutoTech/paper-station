@@ -21,9 +21,9 @@ export const createSite = (data: SiteCreateParam) => {
   return API.post<Restful<SiteItem>>('/site', qs.stringify(body))
 }
 
-export const getSite = (id: string) => API.get<Restful<SiteItem>>(`/site/${id}`)
+export const getSite = (id: number) => API.get<Restful<SiteItem>>(`/site/${id}`)
 
-export const updateSite = (id: string, data: SiteCreateParam) => {
+export const updateSite = (id: number, data: SiteCreateParam) => {
   const body = {
     ...data,
     domains: data.domains.join(','),
@@ -33,4 +33,4 @@ export const updateSite = (id: string, data: SiteCreateParam) => {
   return API.put<Restful<SiteItem>>(`/site/${id}`, qs.stringify(body))
 }
 
-export const delSite = (id: string) => API.delete<Restful<null>>(`/site/${id}`)
+export const delSite = (id: number) => API.delete<Restful<null>>(`/site/${id}`)

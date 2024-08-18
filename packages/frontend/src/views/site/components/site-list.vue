@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emits = defineEmits<{
-  (e: 'del', slug: string): void;
+  (e: 'del', slug: number): void;
   (e: 'refresh'): void;
 }>()
 

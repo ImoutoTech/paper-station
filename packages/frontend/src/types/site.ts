@@ -5,7 +5,7 @@ export interface SiteBaseContent {
 }
 
 export interface SiteItem extends SiteBaseContent {
-  _id: string
+  id: number
   updated_at: string
   owner: number
   created_at: string

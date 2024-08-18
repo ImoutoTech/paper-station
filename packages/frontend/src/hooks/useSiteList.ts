@@ -37,7 +37,7 @@ export const useSiteList = () => {
     refreshSiteList()
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     delSite(id)
       .then((res) => {
         if (res.data.code !== 0) {

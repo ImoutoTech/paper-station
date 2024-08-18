@@ -29,9 +29,9 @@ const props = withDefaults(defineProps<{
 }>(), {});
 
 const emits = defineEmits<{
-  (e: 'del', id: string): void;
-  (e: 'inspect', id: string): void;
-  (e: 'edit', id: string): void;
+  (e: 'del', id: number): void;
+  (e: 'inspect', id: number): void;
+  (e: 'edit', id: number): void;
 }>()
 
 const deleteConfirm = () => {
@@ -44,7 +44,7 @@ const deleteConfirm = () => {
     },
     cancelBtn: '取消',
     onConfirm: () => {
-      emits('del', props.data._id)
+      emits('del', props.data.id)
       dialog.destroy()
     }
   });
@@ -54,12 +54,12 @@ const actionOptions = [
   {
     content: '编辑',
     value: 'edit',
-    onClick: () => emits('edit', props.data._id),
+    onClick: () => emits('edit', props.data.id),
   },
   {
     content: '详情',
     value: 'inspect',
-    onClick: () => emits('inspect', props.data._id),
+    onClick: () => emits('inspect', props.data.id),
   },
   {
     content: '删除',
