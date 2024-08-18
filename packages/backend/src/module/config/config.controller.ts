@@ -10,10 +10,10 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   Put,
+  HttpCode,
 } from '@nestjs/common';
 import { ConfigService } from './config.service';
-import { CreateConfigDto } from '../../dto/config/create-config.dto';
-import { UpdateConfigDto } from '../../dto/config/update-config.dto';
+import { CreateConfigDto, UpdateConfigDto } from '@/dto';
 import { AuthRoles, UserParams } from '@reus-able/nestjs';
 import { UserJwtPayload } from '@reus-able/types';
 
@@ -25,9 +25,13 @@ export class ConfigController {
   constructor(private readonly configService: ConfigService) {}
 
   @Post()
+  @HttpCode(200)
   @AuthRoles('user')
-  create(@Body() createConfigDto: CreateConfigDto) {
-    return this.configService.create(createConfigDto);
+  create(
+    @Body() createConfigDto: CreateConfigDto,
+    @UserParams() user: UserJwtPayload,
+  ) {
+    return this.configService.create(createConfigDto, user.id);
   }
 
   @Get()

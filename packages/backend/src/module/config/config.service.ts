@@ -18,8 +18,20 @@ export class ConfigService {
   @Inject(HLOGGER_TOKEN)
   private logger: HLogger;
 
-  create(createConfigDto: CreateConfigDto) {
-    return createConfigDto;
+  async create(body: CreateConfigDto, ssoId: number) {
+    const owner = await this.userRepo.findOneBy({ ssoId });
+
+    const newCfg = this.cfgRepo.create({
+      name: body.name,
+      data: JSON.parse(body.data),
+      slug: body.slug,
+      owner,
+    });
+
+    await this.cfgRepo.save(newCfg);
+    this.log(`用户#${ssoId}创建配置slug=${body.slug}`);
+
+    return newCfg.getData();
   }
 
   private log(text: string) {
