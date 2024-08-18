@@ -6,7 +6,6 @@ import { ENV_LIST } from '@/utils/const';
 import { AuthGuard, BusinessException, LoggerModule } from '@reus-able/nestjs';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { UserModule, ConfigModule as PaperModule, SiteModule } from '@/module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ENTITY_LIST } from '@/entities';
 
@@ -15,13 +14,6 @@ import { ENTITY_LIST } from '@/entities';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [...ENV_LIST],
-    }),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (cfg: ConfigService) => ({
-        uri: cfg.get<string>('MONGO_URL', ''),
-      }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
