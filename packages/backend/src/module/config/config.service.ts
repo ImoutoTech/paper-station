@@ -76,11 +76,28 @@ export class ConfigService {
     return cfg.getData();
   }
 
-  update(id: string, updateConfigDto: UpdateConfigDto) {
-    return {
-      id,
-      data: updateConfigDto,
-    };
+  async update(slug: string, body: UpdateConfigDto, ssoId: number) {
+    const cfg = await this.cfgRepo.findOne({
+      relations: { owner: true },
+      where: {
+        slug,
+        owner: {
+          ssoId,
+        },
+      },
+    });
+
+    if (isNil(cfg)) {
+      this.warn(`获取用户#${ssoId}编辑配置${slug}失败，无该配置`);
+      throw new BusinessException('无效slug');
+    }
+
+    cfg.data = JSON.parse(body.data);
+    cfg.name = body.name;
+    await this.cfgRepo.save(cfg);
+    this.log(`获取用户#${ssoId}编辑配置${slug}成功`);
+
+    return cfg.getData();
   }
 
   remove(id: string) {

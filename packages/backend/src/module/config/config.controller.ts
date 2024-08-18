@@ -3,13 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   VERSION_NEUTRAL,
   Query,
   DefaultValuePipe,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import { CreateConfigDto } from '../../dto/config/create-config.dto';
@@ -47,16 +47,17 @@ export class ConfigController {
     return this.configService.findOne(slug, user.id);
   }
 
-  @Patch(':id')
+  @Put(':slug')
   @AuthRoles('user')
   update(
     @Param('slug') slug: string,
     @Body() updateConfigDto: UpdateConfigDto,
+    @UserParams() user: UserJwtPayload,
   ) {
-    return this.configService.update(slug, updateConfigDto);
+    return this.configService.update(slug, updateConfigDto, user.id);
   }
 
-  @Delete(':id')
+  @Delete(':slug')
   @AuthRoles('user')
   remove(@Param('slug') slug: string) {
     return this.configService.remove(slug);
