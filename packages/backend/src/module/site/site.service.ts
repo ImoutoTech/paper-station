@@ -89,6 +89,8 @@ export class SiteService {
       throw new BusinessException('无效站点id');
     }
 
+    this.log(`用户#${ssoId}获取站点${id}信息`);
+
     return site.getData();
   }
 
@@ -125,6 +127,24 @@ export class SiteService {
   }
 
   async remove(id: number, ssoId: number) {
-    return `This action removes a #${id} site`;
+    const site = await this.siteRepo.findOne({
+      where: {
+        id,
+        owner: {
+          ssoId,
+        },
+      },
+      relations: { owner: true },
+    });
+
+    if (isNil(site)) {
+      this.warn(`用户#${ssoId}删除站点${id}失败，无该站点`);
+      throw new BusinessException('无效站点id');
+    }
+
+    await this.siteRepo.remove(site);
+    this.log(`用户#${ssoId}删除站点${id}`);
+
+    return null;
   }
 }
