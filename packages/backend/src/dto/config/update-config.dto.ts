@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateConfigDto } from './create-config.dto';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateConfigDto extends PartialType(CreateConfigDto) {}
+export class UpdateConfigDto {
+  @IsString()
+  @IsNotEmpty()
+  data: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
