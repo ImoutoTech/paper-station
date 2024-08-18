@@ -18,6 +18,14 @@ export class ConfigService {
   @Inject(HLOGGER_TOKEN)
   private logger: HLogger;
 
+  private log(text: string) {
+    this.logger.log(text, ConfigService.name);
+  }
+
+  private warn(text: string) {
+    this.logger.warn(text, ConfigService.name);
+  }
+
   async create(body: CreateConfigDto, ssoId: number) {
     const owner = await this.userRepo.findOneBy({ ssoId });
 
@@ -32,14 +40,6 @@ export class ConfigService {
     this.log(`用户#${ssoId}创建配置slug=${body.slug}`);
 
     return newCfg.getData();
-  }
-
-  private log(text: string) {
-    this.logger.log(text, ConfigService.name);
-  }
-
-  private warn(text: string) {
-    this.logger.warn(text, ConfigService.name);
   }
 
   async findAll(ssoId: number, offset: number, limit: number, search = '') {
@@ -79,11 +79,11 @@ export class ConfigService {
     });
 
     if (isNil(cfg)) {
-      this.log(`获取用户#${ssoId}获取配置${slug}详情失败，无该配置`);
+      this.log(`用户#${ssoId}获取配置${slug}详情失败，无该配置`);
       throw new BusinessException('无效slug');
     }
 
-    this.log(`获取用户#${ssoId}获取配置${slug}详情`);
+    this.log(`用户#${ssoId}获取配置${slug}详情`);
 
     return cfg.getData();
   }
@@ -100,19 +100,37 @@ export class ConfigService {
     });
 
     if (isNil(cfg)) {
-      this.warn(`获取用户#${ssoId}编辑配置${slug}失败，无该配置`);
+      this.warn(`用户#${ssoId}编辑配置${slug}失败，无该配置`);
       throw new BusinessException('无效slug');
     }
 
     cfg.data = JSON.parse(body.data);
     cfg.name = body.name;
     await this.cfgRepo.save(cfg);
-    this.log(`获取用户#${ssoId}编辑配置${slug}成功`);
+    this.log(`用户#${ssoId}编辑配置${slug}成功`);
 
     return cfg.getData();
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} config`;
+  async remove(slug: string, ssoId: number) {
+    const cfg = await this.cfgRepo.findOne({
+      relations: { owner: true },
+      where: {
+        slug,
+        owner: {
+          ssoId,
+        },
+      },
+    });
+
+    if (isNil(cfg)) {
+      this.warn(`用户#${ssoId}删除配置${slug}失败，无该配置`);
+      throw new BusinessException('无效slug');
+    }
+
+    await this.cfgRepo.remove(cfg);
+    this.log(`用户#${ssoId}删除配置${slug}`);
+
+    return null;
   }
 }

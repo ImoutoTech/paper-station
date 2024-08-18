@@ -63,7 +63,7 @@ export class ConfigController {
 
   @Delete(':slug')
   @AuthRoles('user')
-  remove(@Param('slug') slug: string) {
-    return this.configService.remove(slug);
+  remove(@Param('slug') slug: string, @UserParams() user: UserJwtPayload) {
+    return this.configService.remove(slug, user.id);
   }
 }
