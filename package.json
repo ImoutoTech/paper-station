@@ -8,6 +8,7 @@
     "dev": "pnpm --filter @paper-station/* run dev",
     "build:fe": "pnpm  --filter @paper-station/frontend run build",
     "build:be": "pnpm  --filter @paper-station/backend run build",
+    "build:finder": "pnpm  --filter @paper-station/finder run build",
     "build": "pnpm  --filter @paper-station/* run build",
     "c": "git-cz"
   },

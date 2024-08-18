@@ -11,7 +11,7 @@ resources:
       pre-deploy:
         - run: export PATH=/usr/local/versions/node/v20.8.1/bin:$PATH && corepack enable && pnpm install
           path: .
-        - run: export PATH=/usr/local/versions/node/v20.8.1/bin:$PATH && corepack enable && pnpm run build:be
+        - run: export PATH=/usr/local/versions/node/v20.8.1/bin:$PATH && corepack enable && pnpm build:finder
           path: .
     props:
       region: ${vars.region}
@@ -32,7 +32,7 @@ resources:
       customRuntimeConfig:
         command:
           - ./packages/finder/bootstrap
-        port: 4000
+        port: 4001
       functionName: ${vars.functionName}
       code: .
       logConfig: auto
