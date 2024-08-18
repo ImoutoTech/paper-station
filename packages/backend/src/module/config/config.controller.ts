@@ -66,4 +66,10 @@ export class ConfigController {
   remove(@Param('slug') slug: string, @UserParams() user: UserJwtPayload) {
     return this.configService.remove(slug, user.id);
   }
+
+  @Post('refresh')
+  @AuthRoles('admin')
+  refresh() {
+    return this.configService.refreshCache();
+  }
 }

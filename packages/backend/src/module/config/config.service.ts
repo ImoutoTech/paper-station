@@ -143,4 +143,13 @@ export class ConfigService {
 
     return null;
   }
+
+  async refreshCache() {
+    const configs = await this.cfgRepo.find();
+    const slugs = configs.map((c) => c.slug);
+    this.emitter.emit('updateConfigs', {
+      slugs,
+    });
+    return null;
+  }
 }
