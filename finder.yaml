@@ -34,7 +34,7 @@ resources:
         REDIS_DATABASE: ${env(REDIS_DATABASE)}
       customRuntimeConfig:
         command:
-          - ./packages/finder/bootstrap
+          - ./bootstrap-finder
         port: 4001
       functionName: ${vars.functionName}
       code: .

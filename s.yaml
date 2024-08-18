@@ -45,7 +45,7 @@ resources:
         REDIS_DATABASE: ${env(REDIS_DATABASE)}
       customRuntimeConfig:
         command:
-          - ./packages/backend/bootstrap
+          - ./bootstrap-backend
         port: 4000
       functionName: ${vars.functionName}
       code: .
