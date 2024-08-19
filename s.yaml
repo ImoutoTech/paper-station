@@ -45,10 +45,10 @@ resources:
         REDIS_DATABASE: ${env(REDIS_DATABASE)}
       customRuntimeConfig:
         command:
-          - ./bootstrap-backend
+          - ./bootstrap
         port: 4000
       functionName: ${vars.functionName}
-      code: .
+      code: ./packages/backend
       logConfig: auto
       triggers:
         - triggerName: http-trigger

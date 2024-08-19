@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-node ./packages/finder/dist/main.js
