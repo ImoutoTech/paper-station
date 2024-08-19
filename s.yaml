@@ -45,7 +45,7 @@ resources:
         REDIS_DATABASE: ${env(REDIS_DATABASE)}
       customRuntimeConfig:
         command:
-          - cd ./packages/backend && ./bootstrap
+          - ./start-backend
         port: 4000
       functionName: ware-house-serverless
       code: .
@@ -92,7 +92,7 @@ resources:
         REDIS_DATABASE: ${env(REDIS_DATABASE)}
       customRuntimeConfig:
         command:
-          - cd ./packages/finder && ./bootstrap
+          - ./start-finder
         port: 4001
       functionName: ware-house-finder-serverless
       code: .

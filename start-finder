@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd ./packages/finder
+node ./dist/main.js
