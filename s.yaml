@@ -5,7 +5,7 @@ vars:
   region: 'cn-shenzhen'
   functionName: 'ware-house-serverless'
 resources:
-  framework:
+  ware-house:
     component: fc3
     actions:
       pre-deploy:
@@ -73,7 +73,7 @@ resources:
           path: .
     props:
       region: ${vars.region}
-      description: ware-house finder
+      description: ware-house-finder
       runtime: custom.debian10
       memorySize: 512
       cpu: 0.35
