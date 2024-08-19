@@ -47,7 +47,7 @@ resources:
         command:
           - ./packages/backend/bootstrap
         port: 4000
-      functionName: ${vars.functionName}
+      functionName: ware-house-serverless
       code: .
       logConfig: auto
       triggers:
@@ -94,7 +94,7 @@ resources:
         command:
           - ./packages/finder/bootstrap
         port: 4001
-      functionName: ${vars.functionName}
+      functionName: ware-house-finder-serverless
       code: .
       logConfig: auto
       triggers:
