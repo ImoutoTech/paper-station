@@ -60,7 +60,7 @@ import { useGlobalStore } from '@/stores/store';
 import { RocketIcon } from 'tdesign-icons-vue-next';
 
 const globalStore = useGlobalStore();
-const displayData = ref();
+const displayData = ref('加载中...');
 const router = useRouter();
 
 onMounted(() => {
