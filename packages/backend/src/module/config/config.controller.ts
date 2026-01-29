@@ -11,6 +11,7 @@ import {
   ParseIntPipe,
   Put,
   HttpCode,
+  Headers,
 } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import { CreateConfigDto, UpdateConfigDto } from '@/dto';
@@ -43,6 +44,11 @@ export class ConfigController {
     @UserParams() user: UserJwtPayload,
   ) {
     return this.configService.findAll(user.id, offset, limit, search);
+  }
+
+  @Get('get')
+  getConfig(@Query('slug') slug: string, @Headers('origin') origin: string) {
+    return this.configService.getConfig(slug, origin);
   }
 
   @Get(':slug')

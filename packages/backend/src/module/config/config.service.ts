@@ -4,9 +4,15 @@ import { ConfigEntity, UserEntity } from '@/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
-import { BusinessException, HLogger, HLOGGER_TOKEN } from '@reus-able/nestjs';
+import {
+  BusinessException,
+  HLogger,
+  HLOGGER_TOKEN,
+  RedisService,
+} from '@reus-able/nestjs';
 import { isNil } from 'lodash';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { BUSINESS_ERROR_CODE, BUSINESS_ERROR_TEXT } from '@reus-able/const';
 
 @Injectable()
 export class ConfigService {
@@ -21,6 +27,9 @@ export class ConfigService {
 
   @Inject(EventEmitter2)
   private emitter: EventEmitter2;
+
+  @Inject(RedisService)
+  private cache: RedisService;
 
   private log(text: string) {
     this.logger.log(text, ConfigService.name);
@@ -151,5 +160,33 @@ export class ConfigService {
       slugs,
     });
     return null;
+  }
+
+  async getConfig(slug: string, origin: string) {
+    const data = await this.cache.jsonGet<{
+      data: object;
+      domains: string[];
+    }>(`config-${slug}`);
+
+    if (isNil(data)) {
+      this.warn(`站点${origin}请求不存在的配置${slug}`);
+      return {
+        data: null,
+        code: BUSINESS_ERROR_CODE.COMMON,
+        msg: 'no such config',
+      };
+    }
+
+    if (!data.domains.includes(origin)) {
+      this.warn(`站点${origin}请求无权限的配置${slug}`);
+      return {
+        data: null,
+        code: BUSINESS_ERROR_CODE.ACCESS_FORBIDDEN,
+        msg: BUSINESS_ERROR_TEXT[BUSINESS_ERROR_CODE.ACCESS_FORBIDDEN],
+      };
+    }
+
+    this.log(`站点${origin}请求配置${slug}成功`);
+    return data.data;
   }
 }
