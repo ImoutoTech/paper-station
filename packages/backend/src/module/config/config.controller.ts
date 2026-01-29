@@ -12,11 +12,13 @@ import {
   Put,
   HttpCode,
   Headers,
+  Res,
 } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import { CreateConfigDto, UpdateConfigDto } from '@/dto';
 import { AuthRoles, UserParams } from '@reus-able/nestjs';
 import { UserJwtPayload } from '@reus-able/types';
+import { FastifyReply } from 'fastify';
 
 @Controller({
   path: 'config',
@@ -47,8 +49,13 @@ export class ConfigController {
   }
 
   @Get('get')
-  getConfig(@Query('slug') slug: string, @Headers('origin') origin: string) {
-    return this.configService.getConfig(slug, origin);
+  async getConfig(
+    @Query('slug') slug: string,
+    @Headers('origin') origin: string,
+    @Res() reply: FastifyReply,
+  ) {
+    const result = await this.configService.getConfig(slug, origin);
+    return reply.send(result);
   }
 
   @Get(':slug')
