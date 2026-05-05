@@ -17,8 +17,8 @@
   "author": "youranreus (https://mitsuha.space)",
   "license": "ISC",
   "devDependencies": {
-    "commitizen": "^4.3.0",
-    "cz-customizable": "^7.0.0"
+    "commitizen": "^4.3.1",
+    "cz-customizable": "^7.5.4"
   },
   "config": {
     "commitizen": {
