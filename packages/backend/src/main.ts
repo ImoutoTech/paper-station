@@ -10,6 +10,8 @@ import {
   AllExceptionsFilter,
   HttpExceptionFilter,
 } from '@reus-able/nestjs';
+import cookie from '@fastify/cookie';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -17,12 +19,19 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  await app.register(cookie);
+
   app.enableVersioning({
     defaultVersion: [VERSION_NEUTRAL, '1'],
     type: VersioningType.URI,
   });
 
-  app.enableCors();
+  const config = app.get(ConfigService);
+  app.enableCors({
+    origin: new URL(config.getOrThrow<string>('FRONT_URL')).origin,
+    credentials: true,
+    exposedHeaders: ['X-CSRF-Token'],
+  });
 
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());

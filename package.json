@@ -5,7 +5,9 @@
   "scripts": {
     "fe": "pnpm --filter @paper-station/frontend run dev",
     "be": "pnpm --filter @paper-station/backend run dev",
-    "dev": "pnpm --filter @paper-station/* run dev",
+    "dev": "pnpm --parallel --filter @paper-station/backend --filter @paper-station/frontend run dev",
+    "dev:all": "pnpm --filter @paper-station/* run dev",
+    "dev:finder": "pnpm --filter @paper-station/finder run dev",
     "build:fe": "pnpm  --filter @paper-station/frontend run build",
     "build:be": "pnpm  --filter @paper-station/backend run build",
     "build:finder": "pnpm  --filter @paper-station/finder run build",
@@ -15,8 +17,8 @@
   "private": true,
   "pnpm": {
     "overrides": {
-      "@fastify/middie": ">=9.3.2",
-      "fastify": ">=5.7.2",
+      "@fastify/middie": "8.3.3",
+      "fastify": "4.29.1",
       "glob": ">=10.5.0",
       "minimatch": ">=9.0.7",
       "picomatch": ">=4.0.4",

@@ -18,7 +18,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { MessagePlugin } from 'tdesign-vue-next';
 import { UnhappyIcon, CatIcon, LoadIcon } from 'tdesign-icons-vue-next'
 import { useGlobalStore } from '@/stores/store';
-import { userLogin } from '@/api/user';
+import { getUserData } from '@/api/user';
 
 const route = useRoute();
 const router = useRouter();
@@ -29,34 +29,45 @@ const msg = ref('登录中');
 const isError = ref(false);
 const loading = ref(true);
 
-const login = (ticket: string) => {
+const errorMessages: Record<string, string> = {
+  oidc_cancelled: '登录已取消',
+  oidc_invalid_callback: '登录回调无效或已过期',
+  oidc_unavailable: '登录服务暂时不可用'
+}
+
+const safeReturnTo = (value: unknown) => {
+  if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) return '/'
+  return value
+}
+
+const login = () => {
   loading.value = true;
 
-  userLogin(ticket).then((res) => {
+  getUserData().then((res) => {
     if (res.data.code !== 0) {
       throw new Error(res.data.msg);
     }
 
-    userStore.login(res.data.data.user);
-    localStorage.setItem('PS_TOKEN', `Bearer ${res.data.data.token}`);
+    userStore.login(res.data.data);
     MessagePlugin.success('登陆成功');
-    router.push('/')
-  }).catch((e) => {
+    router.replace(safeReturnTo(route.query.returnTo))
+  }).catch(() => {
     isError.value = true;
-    msg.value = e.message;
+    msg.value = '登录态建立失败，请重试';
   }).finally(() => {
     loading.value = false;
   })
 }
 
 onMounted(() => {
-  const { code } = route.query;
-  if (!code) {
-    msg.value = '登录参数缺失';
+  const error = typeof route.query.error === 'string' ? route.query.error : ''
+  if (error) {
+    msg.value = errorMessages[error] || '登录失败，请重试';
     isError.value = true;
+    loading.value = false;
     return;
   }
 
-  login(code as string);
+  login();
 });
 </script>

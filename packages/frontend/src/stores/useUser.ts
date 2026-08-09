@@ -2,6 +2,7 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 import type { UserData } from '@/types'
+import { userLogout } from '@/api/user'
 
 export const useUserStore = defineStore('user', () => {
   const isLogin = ref(false)
@@ -21,12 +22,15 @@ export const useUserStore = defineStore('user', () => {
     isLogin.value = true
   }
 
-  const logout = () => {
-    userInfo.avatar = ''
-    userInfo.email = ''
-    userInfo.id = 0
-    isLogin.value = false
-    localStorage.removeItem('PS_TOKEN')
+  const logout = async () => {
+    try {
+      await userLogout()
+    } finally {
+      userInfo.avatar = ''
+      userInfo.email = ''
+      userInfo.id = 0
+      isLogin.value = false
+    }
   }
 
   const setLoading = (val: boolean) => (loginLoading.value = val)

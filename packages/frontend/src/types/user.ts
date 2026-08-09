@@ -5,8 +5,3 @@ export interface UserData {
   id: number
   _id: string
 }
-
-export interface LoginData {
-  token: string
-  user: UserData
-}

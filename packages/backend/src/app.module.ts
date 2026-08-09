@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_LIST } from '@/utils/const';
 import {
-  AuthGuard,
   BusinessException,
   LoggerModule,
   RedisModule,
@@ -19,6 +18,7 @@ import {
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ENTITY_LIST } from '@/entities';
+import { CookieAuthGuard } from '@/common/auth.guard';
 
 @Module({
   imports: [
@@ -70,7 +70,7 @@ import { ENTITY_LIST } from '@/entities';
     },
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: CookieAuthGuard,
     },
   ],
 })

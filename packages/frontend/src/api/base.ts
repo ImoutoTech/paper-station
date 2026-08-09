@@ -1,28 +1,28 @@
 import axios from 'axios'
 import { ENV } from '@/utils/env'
-import { MessagePlugin } from 'tdesign-vue-next'
+
+let csrfToken = ''
 
 const API = axios.create({
-  baseURL: ENV.API
+  baseURL: ENV.API,
+  withCredentials: true
 })
 
 API.interceptors.request.use((req) => {
-  if (localStorage.getItem('PS_TOKEN')) req.headers.Authorization = localStorage.getItem('PS_TOKEN')
+  if (csrfToken && !['get', 'head', 'options'].includes(req.method || 'get')) {
+    req.headers['X-CSRF-Token'] = csrfToken
+  }
   return req
 })
 
 API.interceptors.response.use(
-  (config) => config,
+  (response) => {
+    const nextCsrfToken = response.headers['x-csrf-token']
+    if (typeof nextCsrfToken === 'string') csrfToken = nextCsrfToken
+    return response
+  },
   (config) => {
-    if (config.response.data.msg === 'jwt expired') {
-      localStorage.removeItem('PS_TOKEN')
-      MessagePlugin.error('登录态已失效，即将刷新页面')
-      setTimeout(() => {
-        window.location.reload()
-      }, 3000)
-    }
-
-    return config.response
+    return Promise.reject(config)
   }
 )
 

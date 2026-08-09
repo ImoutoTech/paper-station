@@ -9,7 +9,8 @@
 import { ENV } from '@/utils/env';
 
 const handleLogin = () => {
-  const redirect = `${window.location.origin}/login`
-  window.location.href = `${ENV.SSO}/oauth/authorize?client_id=${ENV.SSO_ID}&redirect_uri=${redirect}`
+  const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`
+  const loginUrl = `${ENV.API.replace(/\/$/, '')}/user/oidc/login`
+  window.location.assign(`${loginUrl}?returnTo=${encodeURIComponent(returnTo)}`)
 }
 </script>

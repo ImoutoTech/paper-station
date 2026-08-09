@@ -24,22 +24,18 @@ const { userStore, isLoading } = useGlobalStore();
 const router = useRouter();
 
 onMounted(() => {
-  if (localStorage.getItem('PS_TOKEN')) {
-    userStore.setLoading(true);
-    getUserData()
-      .then((res) => {
-        if (res.data.code !== 0) {
-          return;
-        }
-        userStore.login({
-          ...res.data?.data
-        })
-        MessagePlugin.success('登录信息获取成功');
+  userStore.setLoading(true);
+  getUserData()
+    .then((res) => {
+      userStore.login({
+        ...res.data?.data
       })
-      .finally(() => {
-        userStore.setLoading(false);
-      })
-  }
+      MessagePlugin.success('登录信息获取成功');
+    })
+    .catch(() => undefined)
+    .finally(() => {
+      userStore.setLoading(false);
+    })
 })
 
 watch(

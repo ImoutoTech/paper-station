@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Paper Station is a dynamic configuration management system (JSON configs served by domain origin). It is a pnpm monorepo with three packages under `packages/`:
 
-- **@paper-station/backend** — NestJS + Fastify API (port 4000). CRUD for configs/sites/users, JWT auth via SSO OAuth, MySQL with TypeORM, Redis caching.
+- **@paper-station/backend** — NestJS + Fastify API (port 4000). CRUD for configs/sites/users, HttpOnly Cookie JWT auth via H OIDC, MySQL with TypeORM, Redis caching.
 - **@paper-station/frontend** — Vue 3 + Vite SPA. TDesign UI, Monaco Editor for JSON editing, Pinia state management, Tailwind CSS (prefix `tw-`).
 - **@paper-station/finder** — Lightweight NestJS + Fastify read-only service (port 4001). Retrieves configs from Redis by slug + origin validation.
 
@@ -18,6 +18,9 @@ pnpm install
 
 # Run all packages in dev mode
 pnpm dev
+
+# Include the separately configured finder service
+pnpm dev:all
 
 # Run individual packages in dev mode
 pnpm fe          # frontend
@@ -37,23 +40,24 @@ cd packages/frontend && pnpm lint
 pnpm c
 ```
 
-There are no tests in this project.
+The backend has focused Vitest coverage for OIDC security helpers. Run it with `pnpm --filter @paper-station/backend test`.
 
 ## Architecture
 
 ### Backend (`packages/backend`)
 
-NestJS modular architecture with global guards and interceptors provided by `@reus-able/nestjs`:
-- **AuthGuard** (global) — JWT validation on all routes; endpoints decorated to skip auth (e.g., login, public config get).
+NestJS modular architecture with global guards and interceptors:
+- **CookieAuthGuard** (global) — validates the local JWT from an HttpOnly Cookie and enforces Origin plus CSRF-token checks on authenticated writes.
 - **TransformInterceptor** (global) — Wraps responses in a standard format.
 - **Modules**: `UserModule`, `ConfigModule`, `SiteModule`, `CacheModule` — each with controller/service/DTOs following NestJS conventions.
 - **Cache flow**: Config mutations emit events via `EventEmitter2` → `CacheService` listens and updates Redis. The finder service reads directly from Redis.
-- **Key endpoints**: `POST /user/login` (SSO OAuth), `GET /config/get?slug=X` (public, validates `origin` header against site domain list), `/config` and `/site` (authenticated CRUD).
+- **OIDC flow**: `GET /user/oidc/login` starts Authorization Code + S256 PKCE; H redirects to `GET /user/oidc/callback`; the backend validates the response and redirects to the frontend `/login` page. Read `packages/backend/OIDC.md` when changing authentication or deployment variables.
+- **Key endpoints**: `GET /user/data`, `POST /user/logout`, `GET /config/get?slug=X` (public, validates `origin` header against site domain list), `/config` and `/site` (authenticated CRUD).
 
 ### Frontend (`packages/frontend`)
 
 Vue 3 Composition API with file-based organization:
-- **`src/api/`** — Axios client (`base.ts` configures interceptors, token from `PS_TOKEN` in localStorage).
+- **`src/api/`** — Axios client with credentialed Cookie requests and in-memory CSRF-token forwarding. OIDC and local JWT tokens are not stored in browser storage.
 - **`src/stores/`** — Pinia stores composed via `store.ts`. `useUserStore` handles auth, `useStorageStore` wraps LocalForage.
 - **`src/hooks/`** — `useConfigList`, `useSiteList` composables for list data fetching with pagination.
 - **`src/views/config/config-edit/`** — Monaco editor workspace with its own local Pinia store (`store.ts`).
