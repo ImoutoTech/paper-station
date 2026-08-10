@@ -162,7 +162,7 @@ export class ConfigService {
     return null;
   }
 
-  async getConfig(slug: string, origin: string) {
+  async getConfig(slug: string, origin?: string) {
     const data = await this.cache.jsonGet<{
       data: object;
       domains: string[];
@@ -177,7 +177,7 @@ export class ConfigService {
       };
     }
 
-    if (!data.domains.includes(origin)) {
+    if (!origin || !data.domains.includes(origin)) {
       this.warn(`站点${origin}请求无权限的配置${slug}`);
       return {
         data: null,

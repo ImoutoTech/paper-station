@@ -51,11 +51,24 @@ export class ConfigController {
   @Get('get')
   async getConfig(
     @Query('slug') slug: string,
-    @Headers('origin') origin: string,
+    @Headers('origin') origin: string | undefined,
+    @Headers('referer') referer: string | undefined,
     @Res() reply: FastifyReply,
   ) {
-    const result = await this.configService.getConfig(slug, origin);
+    const result = await this.configService.getConfig(
+      slug,
+      this.resolveRequestOrigin(origin, referer),
+    );
     return reply.send(result);
+  }
+
+  private resolveRequestOrigin(origin?: string, referer?: string) {
+    const source = origin || referer;
+    try {
+      return source ? new URL(source).origin : undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   @Get(':slug')
