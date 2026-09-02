@@ -5,7 +5,9 @@
       <RouterView />
     </main>
     <footer class="border-t border-border bg-card py-6">
-      <p class="text-center text-sm text-muted-foreground">Made with ❤️ by youranreus</p>
+      <div class="mx-auto w-[90%] max-w-5xl">
+        <p class="text-center text-sm text-muted-foreground">Made with ❤️ by youranreus</p>
+      </div>
     </footer>
   </div>
   <FullscreenLoading v-if="userStore.loginLoading || isLoading" />

@@ -17,22 +17,32 @@
         </UiButton>
       </nav>
 
-      <details class="relative">
-        <summary class="list-none">
-          <UiButton variant="outline" size="icon" aria-label="用户菜单">
-            <User class="size-4" />
-          </UiButton>
-        </summary>
-        <div class="absolute right-0 mt-2 w-72 rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-lg">
+      <div ref="userMenuRef" class="relative">
+        <UiButton
+          variant="outline"
+          size="icon"
+          aria-label="用户菜单"
+          aria-haspopup="menu"
+          :aria-expanded="isUserMenuOpen"
+          @click="toggleUserMenu"
+        >
+          <User class="size-4" />
+        </UiButton>
+        <div
+          v-if="isUserMenuOpen"
+          class="absolute right-0 mt-2 w-72 rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-lg"
+          role="menu"
+        >
           <UserMeta v-if="userStore.isLogin" />
           <UserLogin v-else />
         </div>
-      </details>
+      </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue'
 import { User } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 import { UiButton } from '@/components/ui/button'
@@ -47,10 +57,26 @@ defineOptions({
 
 const router = useRouter()
 const { menuStore, userStore } = useGlobalStore()
-</script>
+const isUserMenuOpen = ref(false)
+const userMenuRef = ref<HTMLElement | null>(null)
 
-<style scoped>
-summary::-webkit-details-marker {
-  display: none;
+const toggleUserMenu = () => {
+  isUserMenuOpen.value = !isUserMenuOpen.value
 }
-</style>
+
+const closeUserMenuWhenClickOutside = (event: PointerEvent) => {
+  const target = event.target
+  if (!(target instanceof Node) || userMenuRef.value?.contains(target)) {
+    return
+  }
+  isUserMenuOpen.value = false
+}
+
+onMounted(() => {
+  document.addEventListener('pointerdown', closeUserMenuWhenClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('pointerdown', closeUserMenuWhenClickOutside)
+})
+</script>

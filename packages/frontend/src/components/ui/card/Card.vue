@@ -17,7 +17,7 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <section :class="cn('rounded-xl border border-border bg-card text-card-foreground shadow-sm', $props.class)">
+  <section :class="cn('rounded-xl border border-border bg-card text-card-foreground', $props.class)">
     <header v-if="title || $slots.header || $slots.actions" class="flex items-center justify-between gap-4 border-b border-border px-5 py-4">
       <slot name="header">
         <h3 class="text-base font-semibold leading-none tracking-tight">{{ title }}</h3>

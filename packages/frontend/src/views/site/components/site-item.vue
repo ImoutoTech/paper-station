@@ -1,7 +1,7 @@
 <template>
   <UiCard :title="data.name" class="h-full">
     <template #actions>
-      <UiDropdownMenu :items="actionOptions" />
+      <UiDropdownMenu :items="actionOptions" icon-only label="站点操作" />
     </template>
     <div class="space-y-4">
       <div class="flex items-center justify-between gap-3">

@@ -16,7 +16,7 @@
           placeholder="输入关键词，回车查找配置"
           @keydown.enter="handleSearch"
         />
-        <UiButton variant="secondary" @click="handleSearch">搜索</UiButton>
+        <UiButton variant="secondary" class="h-10" @click="handleSearch">搜索</UiButton>
       </div>
     </UiCard>
 

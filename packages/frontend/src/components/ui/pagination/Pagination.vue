@@ -38,7 +38,7 @@ const update = (nextCurrent = current.value, nextPageSize = pageSize.value) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+  <div class="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
     <div>显示 {{ start }} - {{ end }} / 共 {{ total }} 条</div>
     <div class="flex flex-wrap items-center gap-2">
       <label class="flex items-center gap-2">

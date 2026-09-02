@@ -22,18 +22,19 @@
           placeholder="输入关键词，回车查找站点"
           @keydown.enter="siteStore.handleSearch"
         />
-        <UiButton variant="secondary" @click="siteStore.handleSearch">搜索</UiButton>
+        <UiButton variant="secondary" class="h-10" @click="siteStore.handleSearch">搜索</UiButton>
       </div>
     </UiCard>
 
-    <SiteList
-      class="mt-5"
-      :data="siteData"
-      :pre-line="displayPreLine"
-      :loading="siteLoading"
-      @del="siteStore.handleDelete($event)"
-      @refresh="siteStore.refreshSiteList"
-    />
+    <div class="mt-5">
+      <SiteList
+        :data="siteData"
+        :pre-line="displayPreLine"
+        :loading="siteLoading"
+        @del="siteStore.handleDelete($event)"
+        @refresh="siteStore.refreshSiteList"
+      />
+    </div>
 
     <UiPagination
       v-model:current="siteStore.sitePagination.current"

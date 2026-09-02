@@ -88,6 +88,6 @@ onUnmounted(() => {
 }
 
 .config-create-sidebar-panel {
-  @apply rounded-xl border border-border bg-card p-4 shadow-sm;
+  @apply rounded-xl border border-border bg-card p-4;
 }
 </style>
