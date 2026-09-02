@@ -24,7 +24,9 @@ packages/frontend/src/
 ├── assets/                 # base.scss, common.scss (global SCSS + mixins)
 ├── components/             # cross-cutting components
 │   ├── layout/             # header-nav, fullscreen-loading
+│   ├── ui/                 # local Origin/shadcn-style UI primitives
 │   └── user/               # user-login, user-meta
+├── lib/                    # UI utility helpers such as cn()
 ├── hooks/                  # useXxx composables for list data + pagination
 │   ├── useConfigList.ts
 │   └── useSiteList.ts
@@ -70,7 +72,8 @@ packages/frontend/src/
 - **Types are centralized** under `src/types/`, exported via barrel
   (`src/types/index.ts`), never defined ad hoc in components.
 - Global components (used across routes) live in `src/components/` grouped by
-  purpose (`layout/`, `user/`).
+  purpose (`layout/`, `user/`). Local UI primitives live under
+  `src/components/ui/` and are imported explicitly by consumers.
 
 ---
 

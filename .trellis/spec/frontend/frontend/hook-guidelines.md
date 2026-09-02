@@ -25,6 +25,8 @@ The two existing hooks are the canonical templates:
   - `xxxLoading` (`ref<boolean>`) — in-flight flag
   - `xxxSearchText` (`ref<string>`) — current search keyword
   - `xxxPagination` (`reactive<{ total, current, size }>`) — pagination state
+- Pagination change handlers use the project-owned `PaginationChange` type from
+  `src/types`, not third-party UI-library types.
 - It returns **all state plus the action functions** (`refreshXxxList`,
   `onPageChange`, `handleSearch`, `handleDelete`...).
 - Components destructure what they need:
@@ -43,10 +45,13 @@ The two existing hooks are the canonical templates:
 - Offset math for the backend's pagination:
   `(configPagination.current - 1) * configPagination.size`.
 - `refreshXxxList` sets `loading = true`, awaits the request, fills state, then
-  clears `loading` — no try/finally, mirror the existing code.
-- Mutations (`delConfig`) live in the hook too, and on success they call
-  `refreshXxxList()` again; TDesign `MessagePlugin.success/error` reports
-  outcomes to the user.
+  clears `loading` — mirror the existing hooks unless improving error handling
+  deliberately.
+- Mutations (`delConfig`, `delSite`) live in the hook too, and on success they
+  call `refreshXxxList()` again.
+- Use `toast.success/error/warning` from `vue-sonner` for hook-level user
+  feedback. Do not introduce compatibility helpers that mimic previous
+  third-party message plugins.
 - There is **no caching layer** (no React Query / SWR equivalent) — every call
   hits the API.
 
@@ -68,3 +73,4 @@ The two existing hooks are the canonical templates:
   need the same list.
 - Forgetting to reset `current = 1` on search.
 - Importing an API module directly in a view when a hook already wraps it.
+- Importing third-party UI pagination or feedback types/plugins into hooks.

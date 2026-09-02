@@ -1,7 +1,7 @@
 import { ref, reactive } from 'vue'
-import { type SiteItem } from '@/types'
+import { toast } from 'vue-sonner'
+import { type SiteItem, type PaginationChange } from '@/types'
 import { getUserSite, delSite } from '@/api/site'
-import { MessagePlugin, type PageInfo } from 'tdesign-vue-next'
 
 export const useSiteList = () => {
   const siteList = ref<SiteItem[]>([])
@@ -26,7 +26,7 @@ export const useSiteList = () => {
     return res
   }
 
-  const onPageChange = (pagination: PageInfo) => {
+  const onPageChange = (pagination: PaginationChange) => {
     sitePagination.size = pagination.pageSize
     sitePagination.current = pagination.current
     refreshSiteList()
@@ -43,11 +43,11 @@ export const useSiteList = () => {
         if (res.data.code !== 0) {
           throw new Error(res.data.msg)
         }
-        MessagePlugin.success('删除成功')
+        toast.success('删除成功')
         refreshSiteList()
       })
       .catch((e) => {
-        MessagePlugin.error(e.message)
+        toast.error(e.message)
       })
   }
 

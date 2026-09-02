@@ -15,3 +15,8 @@ export interface PageList<T> {
 }
 
 export type RestfulPage<T> = Restful<PageList<T>>
+
+export interface PaginationChange {
+  current: number
+  pageSize: number
+}

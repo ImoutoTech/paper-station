@@ -1,73 +1,73 @@
 <template>
-  <t-card :title="data.name" header-bordered>
+  <UiCard :title="data.name" class="h-full">
     <template #actions>
-      <t-dropdown :options="actionOptions" :min-column-width="100">
-        <span class="tw-cursor-pointer">操作</span>
-      </t-dropdown>
+      <UiDropdownMenu :items="actionOptions" />
     </template>
-    <t-space direction="vertical" class="tw-w-full">
-      <div class="tw-flex tw-justify-between">
-        <t-tag theme="success" variant="light">域名</t-tag><span class="tw-ml-2">{{ displayDomainText }} <t-tag v-if="data.domains.length > 1" shape="round" size="small">+{{ data.domains.length - 1 }}</t-tag> </span>
+    <div class="space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <UiBadge variant="secondary">域名</UiBadge>
+        <span class="truncate text-sm">
+          {{ displayDomainText }}
+          <UiBadge v-if="data.domains.length > 1" variant="outline" class="ml-1">+{{ data.domains.length - 1 }}</UiBadge>
+        </span>
       </div>
-      <div class="tw-flex tw-justify-between">
-        <t-tag theme="success" variant="light">配置数</t-tag><span class="tw-ml-2">{{ data.configs.length }}</span>
+      <div class="flex items-center justify-between gap-3">
+        <UiBadge variant="secondary">配置数</UiBadge>
+        <span class="text-sm">{{ data.configs.length }}</span>
       </div>
-    </t-space>
-  </t-card>
+    </div>
+  </UiCard>
+
+  <UiAlertDialog
+    v-model:open="deleteVisible"
+    title="删除站点"
+    :description="`你确定要删除站点 ${data.name} 吗？`"
+    confirm-text="删除"
+    @confirm="confirmDelete"
+  />
 </template>
+
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { SiteItem } from '@/types';
-import { DialogPlugin } from 'tdesign-vue-next';
+import { computed, ref } from 'vue'
+import { UiAlertDialog } from '@/components/ui/alert-dialog'
+import { UiBadge } from '@/components/ui/badge'
+import { UiCard } from '@/components/ui/card'
+import { UiDropdownMenu, type DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import type { SiteItem } from '@/types'
 
 defineOptions({
-  name: 'SiteItem',
-});
+  name: 'SiteItem'
+})
 
 const props = withDefaults(defineProps<{
-  data: SiteItem;
-}>(), {});
+  data: SiteItem
+}>(), {})
 
 const emits = defineEmits<{
-  (e: 'del', id: number): void;
-  (e: 'inspect', id: number): void;
-  (e: 'edit', id: number): void;
+  (e: 'del', id: number): void
+  (e: 'inspect', id: number): void
+  (e: 'edit', id: number): void
 }>()
 
-const deleteConfirm = () => {
-  const dialog = DialogPlugin({
-    header: '删除站点',
-    body: `你确定要删除站点${props.data.name}吗？`,
-    confirmBtn: {
-      theme: 'danger',
-      content: '确定',
-    },
-    cancelBtn: '取消',
-    onConfirm: () => {
-      emits('del', props.data.id)
-      dialog.destroy()
-    }
-  });
-}
+const deleteVisible = ref(false)
 
-const actionOptions = [
+const actionOptions: DropdownMenuItem[] = [
   {
-    content: '编辑',
-    value: 'edit',
-    onClick: () => emits('edit', props.data.id),
+    label: '编辑',
+    onClick: () => emits('edit', props.data.id)
   },
   {
-    content: '详情',
-    value: 'inspect',
-    onClick: () => emits('inspect', props.data.id),
+    label: '详情',
+    onClick: () => emits('inspect', props.data.id)
   },
   {
-    content: '删除',
-    value: 'del',
-    theme: 'error',
-    onClick: () => deleteConfirm(),
-  },
-];
+    label: '删除',
+    destructive: true,
+    onClick: () => {
+      deleteVisible.value = true
+    }
+  }
+]
 
 const displayDomainText = computed(() => {
   if (props.data.domains.length >= 1) {
@@ -76,4 +76,9 @@ const displayDomainText = computed(() => {
 
   return '-'
 })
+
+const confirmDelete = () => {
+  emits('del', props.data.id)
+  deleteVisible.value = false
+}
 </script>

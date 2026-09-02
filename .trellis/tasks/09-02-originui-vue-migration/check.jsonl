@@ -1,0 +1,5 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/frontend/index.md", "reason": "Verify migration matches updated frontend package conventions"}
+{"file": ".trellis/spec/frontend/frontend/component-guidelines.md", "reason": "Verify Vue components, props/emits, styling, and accessibility-relevant patterns"}
+{"file": ".trellis/spec/frontend/frontend/quality-guidelines.md", "reason": "Verify required frontend commands and forbidden patterns"}
+{"file": ".trellis/tasks/09-02-originui-vue-migration/research/originui-vue.md", "reason": "Verify no TDesign-compatible glue and Origin UI Vue integration assumptions"}

@@ -1,0 +1,7 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/frontend/index.md", "reason": "Frontend package overview and UI foundation conventions to update during migration"}
+{"file": ".trellis/spec/frontend/frontend/component-guidelines.md", "reason": "Vue SFC, props/emits, responsive, and styling conventions for component rewrites"}
+{"file": ".trellis/spec/frontend/frontend/directory-structure.md", "reason": "Where shared UI primitives and feature-local components should live"}
+{"file": ".trellis/spec/frontend/frontend/hook-guidelines.md", "reason": "List hook behavior and pagination/delete feedback contracts to preserve"}
+{"file": ".trellis/spec/frontend/frontend/state-management.md", "reason": "Global store and feature-local state boundaries to preserve"}
+{"file": ".trellis/tasks/09-02-originui-vue-migration/research/originui-vue.md", "reason": "Origin UI Vue integration model, dependencies, and Tailwind prefix implications"}

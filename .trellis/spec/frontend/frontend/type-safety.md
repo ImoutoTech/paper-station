@@ -19,11 +19,12 @@ through the barrel `src/types/index.ts`; components and hooks import them via
   `user.ts`, `editor.ts` — interfaces like `ConfigItem`, `SiteItem`, `UserData`.
 - **Request/response param types** colocated with the domain types:
   `ConfigCreateParam`, `SiteCreateParam` (see `src/types/config.ts`).
-- **API envelope types** live in `src/types/index.ts`:
+- **API envelope and shared UI contract types** live in `src/types/index.ts`:
   ```ts
   export interface Restful<T> { code: number; msg: string; data: T }
   export interface PageList<T> { total: number; items: T[] }
   export type RestfulPage<T> = Restful<PageList<T>>
+  export interface PaginationChange { current: number; pageSize: number }
   ```
 - API modules type every call: `API.get<RestfulPage<ConfigItem>>('/config', ...)`
   (see `src/api/config.ts`).
@@ -35,8 +36,8 @@ through the barrel `src/types/index.ts`; components and hooks import them via
 - There is **no runtime validation on the frontend** (no Zod/Yup). The backend
   validates payloads with `class-validator` DTOs; the frontend trusts responses
   but unwraps the envelope defensively (`res?.data?.data?.items || []`).
-- Form validation uses TDesign form rules (`t-form` `:rules`) — see
-  `site-edit.vue`'s `formRules`.
+- Form validation is component-owned: validate local reactive form state, show
+  typed error messages, and block submit until required fields are present.
 
 ---
 

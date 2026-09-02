@@ -1,91 +1,84 @@
 <template>
   <div class="app-home">
-    <div class="banner">
-      <h2>Paper Station 动态配置系统</h2>
-    </div>
+    <section class="banner">
+      <div class="mx-auto w-[90%] max-w-5xl text-center">
+        <p class="mb-3 text-sm font-medium uppercase tracking-[0.3em] text-primary">Paper Station</p>
+        <h1>动态配置发布工作台</h1>
+        <p class="mx-auto mt-4 max-w-2xl text-muted-foreground">
+          管理配置、绑定站点，让应用按域名获取正确的动态配置。
+        </p>
+      </div>
+    </section>
 
-    <div class="content">
-      <h3>README</h3>
-      <t-card>
-        {{ displayData }}
-      </t-card>
-      <t-space></t-space>
-      <h3>快速开始</h3>
-      <t-row :gutter="[16, 16]">
-        <t-col :xs="12" :sm="4">
-          <t-card title="登录" hover-shadow header-bordered class="tw-w-full">
-            啥事都得先有个账号，点击右上角以登录。
-          </t-card>
-        </t-col>
-        <t-col :xs="12" :sm="4">
-          <t-card title="创建配置" hover-shadow header-bordered class="tw-flex-1">
-            创建一个配置，支持JSON格式。
+    <section class="content space-y-5">
+      <UiCard title="README">
+        <pre class="whitespace-pre-wrap break-words text-sm leading-6 text-muted-foreground">{{ displayData }}</pre>
+      </UiCard>
+
+      <div>
+        <h2 class="mb-3 text-2xl font-semibold">快速开始</h2>
+        <div class="grid gap-4 md:grid-cols-3">
+          <UiCard title="登录">
+            <p class="text-sm text-muted-foreground">啥事都得先有个账号，点击右上角以登录。</p>
+          </UiCard>
+          <UiCard title="创建配置">
+            <p class="text-sm text-muted-foreground">创建一个配置，支持 JSON 格式。</p>
             <template #actions>
-              <span
-                v-if="globalStore.userStore.isLogin"
-                class="tw-cursor-pointer"
-                @click="router.push('/config/create')"
-              >
-                <RocketIcon/>
-              </span>
-              <span v-else class="tw-cursor-pointer">请先登录</span>
+              <UiButton v-if="globalStore.userStore.isLogin" size="sm" class="gap-2" @click="router.push('/config/create')">
+                <Rocket class="size-4" />开始
+              </UiButton>
+              <UiBadge v-else variant="outline">请先登录</UiBadge>
             </template>
-          </t-card>
-        </t-col>
-        <t-col :xs="12" :sm="4">
-          <t-card title="创建站点" hover-shadow header-bordered class="tw-w-full">
-            创建一个站点，并输入域名、关联配置。配置关联后，只有该域名才能访问对应配置噢。
+          </UiCard>
+          <UiCard title="创建站点">
+            <p class="text-sm text-muted-foreground">创建一个站点，输入域名并关联配置，限制配置访问来源。</p>
             <template #actions>
-              <span
-                v-if="globalStore.userStore.isLogin"
-                class="tw-cursor-pointer"
-                @click="router.push('/site')"
-              >
-                <RocketIcon/>
-              </span>
-              <span v-else class="tw-cursor-pointer">请先登录</span>
+              <UiButton v-if="globalStore.userStore.isLogin" size="sm" class="gap-2" @click="router.push('/site')">
+                <Rocket class="size-4" />开始
+              </UiButton>
+              <UiBadge v-else variant="outline">请先登录</UiBadge>
             </template>
-          </t-card>
-        </t-col>
-      </t-row>
-    </div>
+          </UiCard>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router';
-import { readConfig } from '@/api/config';
-import { useGlobalStore } from '@/stores/store';
+import { useRouter } from 'vue-router'
+import { Rocket } from 'lucide-vue-next'
+import { UiBadge } from '@/components/ui/badge'
+import { UiButton } from '@/components/ui/button'
+import { UiCard } from '@/components/ui/card'
+import { readConfig } from '@/api/config'
+import { useGlobalStore } from '@/stores/store'
 
-import { RocketIcon } from 'tdesign-icons-vue-next';
-
-const globalStore = useGlobalStore();
-const displayData = ref('加载中...');
-const router = useRouter();
+const globalStore = useGlobalStore()
+const displayData = ref('加载中...')
+const router = useRouter()
 
 onMounted(() => {
-  readConfig('index').then(res => {
-    displayData.value = res.data.content;
+  readConfig('index').then((res) => {
+    displayData.value = res.data.content
   })
 })
 </script>
-<style lang="scss" >
+
+<style lang="scss" scoped>
 .app-home {
   .banner {
-    @apply tw-h-[300px] tw-flex tw-justify-center tw-items-center tw-bg-slate-100 md:tw-h-[500px];
+    @apply flex h-[360px] items-center justify-center bg-gradient-to-br from-blue-50 via-background to-slate-100 md:h-[500px];
 
-    h2 {
-      @apply tw-text-2xl tw-opacity-70 md:tw-text-3xl;
+    h1 {
+      @apply text-3xl font-bold tracking-tight md:text-5xl;
     }
   }
 
   .content {
     @include content-width;
-    @apply tw-my-5;
-
-    h3 {
-      @apply tw-text-xl tw-mb-2 md:tw-text-2xl;
-    }
+    @apply my-6;
   }
 }
 </style>

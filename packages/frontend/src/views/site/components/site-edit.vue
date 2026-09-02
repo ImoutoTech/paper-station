@@ -1,107 +1,102 @@
 <template>
-  <t-dialog
-    :header="`${actionText}站点`"
-    :visible="visible"
-    :width="isMobile ? '90%' : 564"
-    :footer="!readonly"
-    :confirm-btn="{
-      loading,
-    }"
-    @close="emits('update:visible', false)"
-    @confirm="handleConfirm"
-  >
-    <t-form ref="formRef" :data="siteData" :disabled="readonly" :rules="formRules" label-align="top">
-      <t-form-item label="站点名" name="name">
-        <t-input v-model="siteData.name"></t-input>
-      </t-form-item>
+  <UiDialog v-model:open="open" :title="`${actionText}站点`" width-class="max-w-2xl">
+    <form class="space-y-5" @submit.prevent="handleConfirm">
+      <label class="block space-y-2">
+        <span class="text-sm font-medium">站点名</span>
+        <UiInput v-model="siteData.name" :disabled="readonly" :class="errors.name ? 'border-destructive' : ''" />
+        <span v-if="errors.name" class="text-xs text-destructive">{{ errors.name }}</span>
+      </label>
 
-      <t-form-item label="关联配置" name="configs">
-        <t-transfer v-model="siteData.configs" class="config-transfer" :disabled="configLoading" :data="configOptions" :operation="['移除', '加入']" :search="true">
-          <template #title="props">
-            <div>{{ props.type === 'target' ? '已关联' : '未关联' }}</div>
-          </template>
-        </t-transfer>
-      </t-form-item>
+      <label class="block space-y-2">
+        <span class="text-sm font-medium">关联配置</span>
+        <UiMultiSelect
+          v-model="siteData.configs"
+          :disabled="readonly"
+          :loading="configLoading"
+          :options="configOptions"
+          placeholder="搜索配置名称或 Slug"
+        />
+        <span v-if="errors.configs" class="text-xs text-destructive">{{ errors.configs }}</span>
+      </label>
 
-      <t-form-item label="域名" name="domains">
-        <t-tag-input v-model="siteData.domains"></t-tag-input>
-      </t-form-item>
-    </t-form>
-  </t-dialog>
+      <label class="block space-y-2">
+        <span class="text-sm font-medium">域名</span>
+        <UiTagsInput v-model="siteData.domains" :disabled="readonly" placeholder="如 example.com，按 Enter 添加" />
+        <span v-if="errors.domains" class="text-xs text-destructive">{{ errors.domains }}</span>
+      </label>
+
+      <div v-if="!readonly" class="flex justify-end gap-2 pt-2">
+        <UiButton variant="outline" type="button" @click="open = false">取消</UiButton>
+        <UiButton type="submit" :loading="loading">{{ actionText }}</UiButton>
+      </div>
+    </form>
+  </UiDialog>
 </template>
+
 <script setup lang="ts">
-import type { SiteItem } from '@/types';
-import { computed, ref, reactive, watch, onUnmounted } from 'vue';
-import { useConfigList } from '@/hooks/useConfigList';
-import { createSite, updateSite } from '@/api/site';
-import { MessagePlugin } from 'tdesign-vue-next';
-import { useGlobalStore } from '@/stores/store';
+import { computed, ref, reactive, watch, onUnmounted } from 'vue'
+import { toast } from 'vue-sonner'
+import type { SiteItem } from '@/types'
+import { UiButton } from '@/components/ui/button'
+import { UiDialog } from '@/components/ui/dialog'
+import { UiInput } from '@/components/ui/input'
+import { UiMultiSelect } from '@/components/ui/multi-select'
+import { UiTagsInput } from '@/components/ui/tags-input'
+import { useConfigList } from '@/hooks/useConfigList'
+import { createSite, updateSite } from '@/api/site'
 
 defineOptions({
-  name: 'SiteEdit',
+  name: 'SiteEdit'
 })
 
 const props = withDefaults(defineProps<{
-  site?: SiteItem;
-  readonly?: boolean;
-  visible: boolean;
-  isCreate?: boolean;
+  site?: SiteItem
+  readonly?: boolean
+  visible: boolean
+  isCreate?: boolean
 }>(), {
   readonly: false,
   visible: false,
-  isCreate: false,
-});
+  isCreate: false
+})
 
 const emits = defineEmits<{
-  (e: 'update:visible', value: boolean): void;
-  (e: 'confirm'): void;
-}>();
+  (e: 'update:visible', value: boolean): void
+  (e: 'confirm'): void
+}>()
 
-const { configList, configLoading, refreshConfigList } = useConfigList();
+const { configList, configLoading, refreshConfigList } = useConfigList()
 
-const { isMobile } = useGlobalStore()
+const configOptions = computed(() =>
+  configList.value.map((c) => ({
+    label: c.name,
+    value: c.slug
+  }))
+)
 
-const configOptions = computed(() => configList.value.map((c) => ({
-  label: c.name,
-  value: c.slug,
-})))
+const open = computed({
+  get: () => props.visible,
+  set: (value: boolean) => emits('update:visible', value)
+})
 
-const actionText = computed(() => props.isCreate ? '创建' : '编辑');
+const actionText = computed(() => {
+  if (props.readonly) return '查看'
+  return props.isCreate ? '创建' : '编辑'
+})
 
 const siteData = reactive({
   domains: [] as string[],
   configs: [] as string[],
+  name: ''
+})
+
+const errors = reactive({
   name: '',
-});
+  domains: '',
+  configs: ''
+})
 
-const formRules = {
-  name: [
-    {
-      required: true,
-      message: '请填写站点名',
-      type: 'error'
-    }
-  ],
-  domains: [
-    {
-      required: true,
-      message: '请先完成此项',
-      type: 'error',
-      trigger: 'blur'
-    },
-  ],
-  configs: [
-    {
-      required: true,
-      message: '请先完成此项',
-      type: 'error',
-      trigger: 'blur'
-    },
-  ],
-};
-
-const formRef = ref();
-const loading = ref(false);
+const loading = ref(false)
 
 const initSiteData = () => {
   if (props.isCreate) {
@@ -109,57 +104,63 @@ const initSiteData = () => {
     siteData.configs = []
     siteData.domains = []
   } else {
-    siteData.name = props.site?.name || '';
-    siteData.domains = props.site?.domains || [];
-    siteData.configs = props.site?.configs || [];
+    siteData.name = props.site?.name || ''
+    siteData.domains = [...(props.site?.domains || [])]
+    siteData.configs = [...(props.site?.configs || [])]
   }
+  clearErrors()
+}
+
+const clearErrors = () => {
+  errors.name = ''
+  errors.domains = ''
+  errors.configs = ''
+}
+
+const validateForm = () => {
+  errors.name = siteData.name.trim() ? '' : '请填写站点名'
+  errors.domains = siteData.domains.length ? '' : '请至少添加一个域名'
+  errors.configs = siteData.configs.length ? '' : '请至少关联一个配置'
+  return !errors.name && !errors.domains && !errors.configs
 }
 
 const unwatch = watch(
   () => props.visible,
-  async (val) => {
+  (val) => {
     if (val) {
       initSiteData()
       refreshConfigList()
-      await formRef.value.clearValidate();
     }
   }
-);
+)
 
-const handleConfirm = async () => {
-  const isValidate = await formRef.value.validate();
-  if (isValidate !== true) {
-    return;
+const handleConfirm = () => {
+  if (!validateForm()) {
+    return
   }
 
-  loading.value = true;
-  const result = props.isCreate ?
-    createSite({...siteData}) :
-    updateSite((props.site as SiteItem).id, {...siteData});
+  loading.value = true
+  const result = props.isCreate
+    ? createSite({ ...siteData })
+    : updateSite((props.site as SiteItem).id, { ...siteData })
 
-  result.then((res) => {
-    if (res.data.code === 0) {
-      MessagePlugin.success('操作成功')
-      emits('confirm')
-      emits('update:visible', false)
-    } else {
-      throw new Error(res.data.msg)
-    }
-  }).catch((e) => {
-    MessagePlugin.error(e.message);
-  }).finally(() => {
-    loading.value = false;
-  })
+  result
+    .then((res) => {
+      if (res.data.code === 0) {
+        toast.success('操作成功')
+        emits('confirm')
+        emits('update:visible', false)
+      } else {
+        throw new Error(res.data.msg)
+      }
+    })
+    .catch((e) => {
+      toast.error(e.message)
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-onUnmounted(unwatch);
+onUnmounted(unwatch)
 </script>
-<style lang="scss" scoped>
-.config-transfer {
-  @media (max-width: 768px) {
-    flex-direction: column;
-    row-gap: 10px;
-    width: 100%;
-  }
-}
-</style>

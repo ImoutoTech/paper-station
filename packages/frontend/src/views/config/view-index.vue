@@ -1,34 +1,50 @@
 <template>
   <div class="config-home">
-    <t-space direction="vertical" class="tw-w-full">
-      <t-card>
-        <div class="tw-flex tw-justify-between tw-items-center tw-mb-3">
-          <h2>我的配置</h2>
-          <t-button @click="router.push({name: 'config-create'})">新建</t-button>
+    <UiCard>
+      <template #header>
+        <div>
+          <h2 class="text-2xl font-semibold">我的配置</h2>
+          <p class="mt-1 text-sm text-muted-foreground">搜索、查看并维护动态配置。</p>
         </div>
-        <t-input v-model="configSearchText" placeholder="输入关键词，回车查找配置" @enter="handleSearch"></t-input>
-      </t-card>
+      </template>
+      <template #actions>
+        <UiButton @click="router.push({ name: 'config-create' })">新建</UiButton>
+      </template>
+      <div class="flex gap-2">
+        <UiInput
+          v-model="configSearchText"
+          placeholder="输入关键词，回车查找配置"
+          @keydown.enter="handleSearch"
+        />
+        <UiButton variant="secondary" @click="handleSearch">搜索</UiButton>
+      </div>
+    </UiCard>
 
-      <t-card>
-        <config-list :data="configData" :loading="configLoading" @del="handleDelete"/>
-      </t-card>
+    <UiCard class="mt-5" content-class="p-0">
+      <ConfigList :data="configData" :loading="configLoading" @del="handleDelete" />
+    </UiCard>
 
-      <t-pagination
-        v-model="configPagination.current"
-        v-model:pageSize="configPagination.size"
-        :total="configPagination.total"
-        @change="onPageChange"
-      />
-    </t-space>
+    <UiPagination
+      v-model:current="configPagination.current"
+      v-model:page-size="configPagination.size"
+      class="mt-5"
+      :total="configPagination.total"
+      @change="onPageChange"
+    />
   </div>
 </template>
-<script setup lang="ts">
-import { onMounted } from 'vue';
-import { useRouter } from "vue-router";
-import { useConfigList } from '@/hooks/useConfigList';
-import ConfigList from './components/config-list.vue';
 
-const { 
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { UiButton } from '@/components/ui/button'
+import { UiCard } from '@/components/ui/card'
+import { UiInput } from '@/components/ui/input'
+import { UiPagination } from '@/components/ui/pagination'
+import { useConfigList } from '@/hooks/useConfigList'
+import ConfigList from './components/config-list.vue'
+
+const {
   configList: configData,
   refreshConfigList,
   configLoading,
@@ -36,22 +52,19 @@ const {
   onPageChange,
   configSearchText,
   handleSearch,
-  handleDelete,
-} = useConfigList();
+  handleDelete
+} = useConfigList()
 
-const router = useRouter();
+const router = useRouter()
 
 onMounted(() => {
   refreshConfigList()
-});
+})
 </script>
+
 <style lang="scss" scoped>
 .config-home {
   @include content-width;
-  @apply tw-mt-5;
-
-  h2 {
-    @apply tw-text-xl tw-font-bold;
-  }
+  @apply mt-5 pb-8;
 }
 </style>

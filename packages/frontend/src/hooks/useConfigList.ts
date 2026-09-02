@@ -1,7 +1,7 @@
 import { ref, reactive } from 'vue'
-import { type ConfigItem } from '@/types'
+import { toast } from 'vue-sonner'
+import { type ConfigItem, type PaginationChange } from '@/types'
 import { getUserConfig, delConfig } from '@/api/config'
-import { MessagePlugin, type PageInfo } from 'tdesign-vue-next'
 
 export const useConfigList = () => {
   const configList = ref<ConfigItem[]>([])
@@ -26,7 +26,7 @@ export const useConfigList = () => {
     return res
   }
 
-  const onPageChange = (pagination: PageInfo) => {
+  const onPageChange = (pagination: PaginationChange) => {
     configPagination.size = pagination.pageSize
     configPagination.current = pagination.current
     refreshConfigList()
@@ -43,11 +43,11 @@ export const useConfigList = () => {
         if (res.data.code !== 0) {
           throw new Error(res.data.msg)
         }
-        MessagePlugin.success('删除成功')
+        toast.success('删除成功')
         refreshConfigList()
       })
       .catch((e) => {
-        MessagePlugin.error(e.message)
+        toast.error(e.message)
       })
   }
 

@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { toast } from 'vue-sonner'
 import routes from './routes'
 import pinia from '../stores/pinia'
 import { useGlobalStore } from '@/stores/store'
-import { MessagePlugin } from 'tdesign-vue-next'
 
 const { menuStore, userStore } = useGlobalStore(pinia)
 
@@ -13,7 +13,7 @@ const router = createRouter({
 
 router.afterEach((to) => {
   if (to.meta.needAuth && !userStore.isLogin && !userStore.loginLoading) {
-    MessagePlugin.warning('请先登录')
+    toast.warning('请先登录')
     router.push('/')
   }
 

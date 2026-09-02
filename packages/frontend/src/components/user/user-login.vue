@@ -1,12 +1,13 @@
 <template>
-  <div class="tw-p-2">
-    <t-space>
-      <t-button @click="handleLogin">登录</t-button>
-    </t-space>
+  <div class="space-y-3 p-2">
+    <p class="text-sm text-muted-foreground">登录后可管理配置与站点。</p>
+    <UiButton class="w-full" @click="handleLogin">登录</UiButton>
   </div>
 </template>
+
 <script setup lang="ts">
-import { ENV } from '@/utils/env';
+import { UiButton } from '@/components/ui/button'
+import { ENV } from '@/utils/env'
 
 const handleLogin = () => {
   const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`
