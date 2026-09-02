@@ -21,11 +21,14 @@ the rest conversationally.
 
 ## Status (update the checkboxes as you complete each item)
 
-- [ ] Fill guidelines for @paper-station/backend
-- [ ] Fill guidelines for @paper-station/finder
-- [ ] Fill guidelines for @paper-station/frontend
-- [ ] Add code examples
+- [x] Fill guidelines for @paper-station/backend
+- [x] Fill guidelines for @paper-station/finder
+- [x] Fill guidelines for @paper-station/frontend
+- [x] Add code examples
 
+> Note: `spec/backend/frontend/` and `spec/finder/frontend/` were deleted during
+> bootstrap — those packages contain no frontend code (backend/finder are pure
+> NestJS services; all frontend guidance lives in `spec/frontend/frontend/`).
 ---
 
 ## Spec files to populate
