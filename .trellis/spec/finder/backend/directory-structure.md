@@ -1,54 +1,49 @@
 # Directory Structure
 
-> How backend code is organized in this project.
+> How finder code is organized in `packages/finder`.
 
 ---
 
 ## Overview
 
-<!--
-Document your project's backend directory structure here.
-
-Questions to answer:
-- How are modules/packages organized?
-- Where does business logic live?
-- Where are API endpoints defined?
-- How are utilities and helpers organized?
--->
-
-(To be filled by the team)
+The finder is a single-purpose service: its whole source tree is four files.
+Do not grow module folders unless a second feature actually lands.
 
 ---
 
 ## Directory Layout
 
 ```
-<!-- Replace with your actual structure -->
-src/
-├── ...
-└── ...
+packages/finder/src/
+├── main.ts              # bootstrap: Fastify, versioning, CORS, global filters
+├── app.module.ts        # root module: ConfigModule + LoggerModule + RedisModule
+├── app.controller.ts    # single public GET / endpoint
+├── app.service.ts       # Redis read + origin validation logic
+└── utils/
+    └── const.ts         # ENV_LIST (shared shape with backend)
 ```
 
 ---
 
 ## Module Organization
 
-<!-- How should new features/modules be organized? -->
-
-(To be filled by the team)
+- No feature modules, no `@Module` decomposition — one root `AppModule`
+  (`app.module.ts`) with `AppController` + `AppService` as providers.
+- New shared helpers (if any) go under `src/utils/`, mirroring the backend's
+  `utils/` convention.
 
 ---
 
 ## Naming Conventions
 
-<!-- File and folder naming rules -->
-
-(To be filled by the team)
+- Same conventions as `@paper-station/backend`: `kebab-case` files,
+  `PascalCase` classes (`AppController`, `AppService`), `SCREAMING_SNAKE_CASE`
+  constants (`ENV_LIST`).
+- Imports use the `@/` alias (`@/utils/const`).
 
 ---
 
 ## Examples
 
-<!-- Link to well-organized modules as examples -->
-
-(To be filled by the team)
+- `src/app.service.ts` — the single place business logic may live; keep the
+  pattern of a tiny injectable service with `HLogger` + `RedisService`.

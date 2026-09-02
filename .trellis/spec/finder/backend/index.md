@@ -1,38 +1,49 @@
-# Backend Development Guidelines
+# Backend Development Guidelines (@paper-station/finder)
 
-> Best practices for backend development in this project.
+> NestJS + Fastify read-only service conventions for the Paper Station finder
+> package (`packages/finder`, port 4001).
 
 ---
 
 ## Overview
 
-This directory contains guidelines for backend development. Fill in each file with your project's specific conventions.
+The finder is a deliberately minimal NestJS 10 service on the Fastify adapter.
+It serves one public endpoint that reads published configs from **Redis by slug**
+and validates the requesting origin against the site's allowed domains. It has:
+
+- No database (no TypeORM, no entities).
+- No authentication / guards (public endpoint).
+- No controllers beyond the single `AppController`.
+- No caching layer beyond reading Redis directly.
+
+Shared infrastructure still comes from `@reus-able/nestjs` (`LoggerModule`,
+`RedisModule`, `AllExceptionsFilter`, `HttpExceptionFilter`) exactly as the
+backend package does.
+
+Key entry points:
+
+- `packages/finder/src/main.ts` — bootstrap: Fastify, URI versioning, CORS, filters.
+- `packages/finder/src/app.module.ts` — root module: env config, LoggerModule, RedisModule.
+- `packages/finder/src/app.service.ts` — the Redis read + origin validation logic.
 
 ---
 
 ## Guidelines Index
 
-| Guide | Description | Status |
-|-------|-------------|--------|
-| [Directory Structure](./directory-structure.md) | Module organization and file layout | To fill |
-| [Database Guidelines](./database-guidelines.md) | ORM patterns, queries, migrations | To fill |
-| [Error Handling](./error-handling.md) | Error types, handling strategies | To fill |
-| [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | To fill |
-| [Logging Guidelines](./logging-guidelines.md) | Structured logging, log levels | To fill |
+| Guide | Description |
+|-------|-------------|
+| [Directory Structure](./directory-structure.md) | Minimal app layout, naming |
+| [Database Guidelines](./database-guidelines.md) | Redis key/value patterns (no SQL) |
+| [Error Handling](./error-handling.md) | `{ data: null, code, msg }` responses |
+| [Quality Guidelines](./quality-guidelines.md) | Lint/prettier, forbidden patterns |
+| [Logging Guidelines](./logging-guidelines.md) | `HLogger` usage, levels |
 
 ---
 
-## How to Fill These Guidelines
+## Layer Notes
 
-For each guideline file:
-
-1. Document your project's **actual conventions** (not ideals)
-2. Include **code examples** from your codebase
-3. List **forbidden patterns** and why
-4. Add **common mistakes** your team has made
-
-The goal is to help AI assistants and new team members understand how YOUR project works.
-
----
-
-**Language**: All documentation should be written in **English**.
+- All code lives under `packages/finder/src/`; alias `@/*` → `src/*`.
+- Response envelope on failure is hand-built here (see Error Handling), unlike
+  the authenticated backend — because finder's consumer is a raw site script.
+- Keep this package minimal: do not add auth, ORM, or business modules unless a
+  new requirement explicitly needs them.

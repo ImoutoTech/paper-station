@@ -1,51 +1,61 @@
 # Logging Guidelines
 
-> How logging is done in this project.
+> Logging conventions for the finder — identical style to the backend.
 
 ---
 
 ## Overview
 
-<!--
-Document your project's logging conventions here.
+- **Logger**: `HLogger` injected via `HLOGGER_TOKEN` from `@reus-able/nestjs`
+  (global `LoggerModule` registered in `app.module.ts`). Never use `console.*`.
+- The service wraps the logger in private helpers with `AppService.name` as
+  context (see `app.service.ts`):
+  ```ts
+  @Inject(HLOGGER_TOKEN)
+  private logger: HLogger;
 
-Questions to answer:
-- What logging library do you use?
-- What are the log levels and when to use each?
-- What should be logged?
-- What should NOT be logged (PII, secrets)?
--->
-
-(To be filled by the team)
+  private log(text: string) {
+    this.logger.log(text, AppService.name);
+  }
+  private warn(text: string) {
+    this.logger.warn(text, AppService.name);
+  }
+  ```
 
 ---
 
 ## Log Levels
 
-<!-- When to use each level: debug, info, warn, error -->
-
-(To be filled by the team)
+- `log(...)` — successful config delivery: `站点${origin}请求配置${slug}成功`.
+- `warn(...)` — every failure path before returning the error object:
+  unknown slug, origin not in domain list.
 
 ---
 
 ## Structured Logging
 
-<!-- Log format, required fields -->
-
-(To be filled by the team)
+- Same plain-Chinese, identifier-inlined style as the backend:
+  `站点${origin}请求不存在的配置${slug}`. No key/value formatter.
+- Always pass the service name as context.
 
 ---
 
 ## What to Log
 
-<!-- Important events to log -->
-
-(To be filled by the team)
+- Each request outcome with origin + slug.
+- Failures with the reason distinguishable in text (不存在 vs 无权限).
 
 ---
 
 ## What NOT to Log
 
-<!-- Sensitive data, PII, secrets -->
+- The config `data` payload itself (arbitrary third-party JSON).
+- Any credentials or cookies (the finder handles none, keep it that way).
 
-(To be filled by the team)
+---
+
+## Common Mistakes
+
+- Using Nest's built-in `Logger` instead of `HLogger` via `HLOGGER_TOKEN`.
+- Returning a failure without a `warn` line first.
+- Logging the full Redis value including `data`.

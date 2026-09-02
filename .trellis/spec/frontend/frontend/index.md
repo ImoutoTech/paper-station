@@ -1,39 +1,50 @@
-# Frontend Development Guidelines
+# Frontend Development Guidelines (@paper-station/frontend)
 
-> Best practices for frontend development in this project.
+> Vue 3 + Vite SPA conventions for the Paper Station frontend package
+> (`packages/frontend`).
 
 ---
 
 ## Overview
 
-This directory contains guidelines for frontend development. Fill in each file with your project's specific conventions.
+The frontend is a Vue 3 Composition API SPA built with Vite. It uses:
+
+- **UI**: TDesign Vue Next (`tdesign-vue-next`) with auto-imported components
+  and Vue APIs (`unplugin-auto-import` + `unplugin-vue-components`).
+- **State**: Pinia stores composed via a single aggregate store (`store.ts`).
+- **Styling**: Tailwind CSS with the `tw-` prefix + scoped SCSS, plus shared
+  SCSS mixins injected globally.
+- **Editor**: Monaco Editor (`@guolao/vue-monaco-editor`) for JSON editing.
+- **API**: Axios client with credentialed Cookie requests and in-memory CSRF
+  token forwarding (`src/api/base.ts`).
+
+Key entry points:
+
+- `packages/frontend/vite.config.ts` — auto-imports, `@` alias, SCSS injection.
+- `packages/frontend/src/main.ts` — app bootstrap, Monaco workers, plugins.
+- `packages/frontend/src/router/index.ts` — router + auth/menu side effects.
+- `packages/frontend/src/api/base.ts` — the shared Axios instance (CSRF logic).
 
 ---
 
 ## Guidelines Index
 
-| Guide | Description | Status |
-|-------|-------------|--------|
-| [Directory Structure](./directory-structure.md) | Module organization and file layout | To fill |
-| [Component Guidelines](./component-guidelines.md) | Component patterns, props, composition | To fill |
-| [Hook Guidelines](./hook-guidelines.md) | Custom hooks, data fetching patterns | To fill |
-| [State Management](./state-management.md) | Local state, global state, server state | To fill |
-| [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | To fill |
-| [Type Safety](./type-safety.md) | Type patterns, validation | To fill |
+| Guide | Description |
+|-------|-------------|
+| [Directory Structure](./directory-structure.md) | File layout: api/stores/hooks/views |
+| [Component Guidelines](./component-guidelines.md) | SFC structure, props/emits, styling |
+| [Hook Guidelines](./hook-guidelines.md) | `useXxx` composables, data fetching |
+| [State Management](./state-management.md) | Pinia stores, aggregate store, local stores |
+| [Type Safety](./type-safety.md) | Shared types, `Restful<T>`, DTO typing |
+| [Quality Guidelines](./quality-guidelines.md) | Lint/type-check, forbidden patterns |
 
 ---
 
-## How to Fill These Guidelines
+## Layer Notes
 
-For each guideline file:
-
-1. Document your project's **actual conventions** (not ideals)
-2. Include **code examples** from your codebase
-3. List **forbidden patterns** and why
-4. Add **common mistakes** your team has made
-
-The goal is to help AI assistants and new team members understand how YOUR project works.
-
----
-
-**Language**: All documentation should be written in **English**.
+- Vue APIs and TDesign components are **auto-imported** — no explicit import
+  needed for `ref`/`computed`/`t-button` (see `vite.config.ts`). TypeScript
+  still imports types explicitly (`import type { ConfigItem } from '@/types'`).
+- The frontend never stores tokens in browser storage: auth is HttpOnly Cookie
+  + in-memory CSRF token only.
+- API responses are typed against the backend's `Restful<T>` envelope.

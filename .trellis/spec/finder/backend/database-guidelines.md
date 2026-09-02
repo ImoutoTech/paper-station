@@ -1,51 +1,45 @@
 # Database Guidelines
 
-> Database patterns and conventions for this project.
+> The finder has no SQL database — its "database" is Redis.
 
 ---
 
 ## Overview
 
-<!--
-Document your project's database conventions here.
-
-Questions to answer:
-- What ORM/query library do you use?
-- How are migrations managed?
-- What are the naming conventions for tables/columns?
-- How do you handle transactions?
--->
-
-(To be filled by the team)
+The finder is stateless with respect to MySQL: it never connects to TypeORM or
+the `users`/`configs`/`sites` tables. All reads go through `RedisService`
+(injected from `@reus-able/nestjs`, registered by `RedisModule` in
+`app.module.ts`).
 
 ---
 
-## Query Patterns
+## Redis Access Patterns
 
-<!-- How should queries be written? Batch operations? -->
-
-(To be filled by the team)
-
----
-
-## Migrations
-
-<!-- How to create and run migrations -->
-
-(To be filled by the team)
+- Use `RedisService.jsonGet<T>(key)` for reading cached configs — the backend's
+  `CacheService` writes these values with `jsonSet`.
+- Key shape: `config-${slug}` — must stay identical to the backend writer
+  (`packages/backend/src/module/cache/cache.service.ts`). Changing the key
+  format in one package without the other breaks the read path.
+- Value shape (typed locally as `IConfigData` in `app.service.ts`):
+  ```ts
+  interface IConfigData {
+    data: object;
+    domains: string[];
+  }
+  ```
+- Treat a cache miss with `isNil(data)` (lodash) — never truthiness checks.
 
 ---
 
 ## Naming Conventions
 
-<!-- Table names, column names, index names -->
-
-(To be filled by the team)
+- Redis key prefix `config-` + slug, lowercase, matches the backend exactly.
+- Domain lists are plain string arrays inside the JSON value.
 
 ---
 
 ## Common Mistakes
 
-<!-- Database-related mistakes your team has made -->
-
-(To be filled by the team)
+- Renaming the Redis key format in only one of backend / finder.
+- Calling TypeORM / repository APIs in the finder — it has no DataSource.
+- Assuming `jsonGet` returns `null` vs `undefined` consistently — use `isNil`.
